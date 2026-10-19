@@ -1,7 +1,7 @@
 {
   "name": "flow",
   "description": "Development flow from request to release, phase by phase. next (start the next phase or the next authorized issue), work (P0 triage), spec (P1 product spec, completeness matrix, gap review), plan (P2 technical plan with checked premises), mockup (P3 mockups judged by the ux-critic), qa (P5 automatic part), bench (P5 device part under the bench lock), handoff (P6 pull request); agents ux-critic and device-tester.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "author": {
     "name": "Lorenzo Zuin"
   },

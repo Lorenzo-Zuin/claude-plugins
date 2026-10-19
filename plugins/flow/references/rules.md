@@ -22,7 +22,7 @@
 | `phase:P0` … `phase:P9` | the session at each transition | the phase; it lives only in the label |
 | `spec-ok`, `mockup-ok`, `preview-ok`, `autonomous` | **the user only** | approvals; `autonomous` lets the session decide in place of the user and stands in for `spec-ok` |
 | `priority:high`, `priority:low` | the user | order of work |
-| `needs-bench` | the session in P5 or P6 (evaluation missing) | waits for the device bench or for the user's evaluation run; removed by the session that does it |
+| `needs-bench` | the session in P5 or P6 (evaluation missing) | waits for the device bench (`flow:bench`) or for the user's evaluation run; removed by the session that does it |
 
 - Work only on issues with `ready` or `requested`, without `on-hold` and without `in-progress` set by another session.
 - **Never add `ready`, `on-hold`, `lane:H`, `spec-ok`, `mockup-ok`, `preview-ok` or `autonomous`, and never remove `on-hold`.** Cloud sessions act with the user's own GitHub identity: GitHub cannot tell the session from the user, so this rule is yours to keep, not GitHub's. A ticked approval box in the issue body is a reminder, not an approval: only the label counts.

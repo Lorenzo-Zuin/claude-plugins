@@ -14,5 +14,5 @@ Written by the automatic part of P5 when a criterion needs the device bench. A s
 ```
 
 - One line per kind of item; nothing that the plan or the spec already says in full: link them.
-- Add the label `needs-bench` at the same time. Only the bench session removes it, when the section is done.
+- Add the label `needs-bench` at the same time. Only the bench session (`flow:bench`) removes it, when the section is done.
 - If the project has no bench (no device part at all), the device criteria go to the user's manual test script instead, and the section says so in one line.

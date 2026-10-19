@@ -9,7 +9,7 @@ Read top to bottom; the first row whose condition holds decides. "Approved" mean
 | 3 | neither `ready` nor `requested` | stop: «waits for you: add `ready`, `on-hold`, or close the issue» |
 | 4 | an open question `Q…` without a ticked answer in the issue, or an unanswered question in the last comments, and the next phase is P4 or later | stop: repeat the questions with the recommended answers. Before P4, phases P1-P3 may go on on the recommended answers, written as assumed in the spec or plan |
 | 5 | an acceptance criterion with status `fail`, or a gate that is red | stop or fix: name the cause; fix it if it is in this work item's scope |
-| 6 | `needs-bench` | stop: the device part, or the user's evaluation run, waits for a session on the bench machine (worklog `## Needs bench`); no skill for the bench yet (SKILL.md, section 5) |
+| 6 | `needs-bench` | on the bench machine, with `Bench:` declared and a device item in `## Needs bench`: start `flow:bench`. Elsewhere, or when only the user's evaluation run is missing: stop; the work item waits for a session on the bench machine, or for the user's run |
 | 7 | no `lane:` label | start `flow:work` to finish P0 |
 | 8 | `phase:P0` or no `phase:` label | start `flow:work` to finish P0 |
 | 9 | `phase:P1`, lane M or L, the spec section or file is missing or incomplete | start `flow:spec` |

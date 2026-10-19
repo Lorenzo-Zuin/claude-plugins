@@ -1,0 +1,8 @@
+{
+  "name": "orchestra",
+  "description": "Main session plans, delegates to subagents (explore, implementer, verifier, reviewer) and reviews; keeps a per-project delegation log.",
+  "version": "1.3.1",
+  "author": {
+    "name": "Lorenzo Zuin"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "description": "Reminds Claude, at every session start, to write the closing message with the recap skill.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Before the closing message of any turn that did work (a finished task, a stop to ask the user for a decision or an action, a hand-over of unfinished work), load the recap skill (recap:recap) and follow it. Not for a plain answer to a question.'"
+          }
+        ]
+      }
+    ]
+  }
+}

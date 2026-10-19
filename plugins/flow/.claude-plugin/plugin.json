@@ -1,0 +1,19 @@
+{
+  "name": "flow",
+  "description": "Development flow from request to release, phase by phase. next (start the next phase or the next authorized issue), work (P0 triage), spec (P1 product spec, completeness matrix, gap review), plan (P2 technical plan with checked premises), mockup (P3 mockups judged by the ux-critic), qa (P5 automatic part), handoff (P6 pull request); agent ux-critic.",
+  "version": "0.2.1",
+  "author": {
+    "name": "Lorenzo Zuin"
+  },
+  "keywords": [
+    "workflow",
+    "triage",
+    "spec",
+    "technical-plan",
+    "work-item",
+    "mockup",
+    "ux-review",
+    "qa",
+    "handoff"
+  ]
+}

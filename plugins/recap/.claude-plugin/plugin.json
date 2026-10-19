@@ -1,0 +1,14 @@
+{
+  "name": "recap",
+  "description": "Shape of the closing message of a turn that did work: status in one line, what was done, what is missing and who does it, the user's steps with exact commands, questions with ready answers, and a prompt to paste into a new session.",
+  "version": "1.0.1",
+  "author": {
+    "name": "Lorenzo Zuin"
+  },
+  "keywords": [
+    "recap",
+    "handoff",
+    "summary",
+    "next-steps"
+  ]
+}

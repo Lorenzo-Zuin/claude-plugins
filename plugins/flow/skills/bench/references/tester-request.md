@@ -9,7 +9,7 @@ Lock: held by this session since <time>; renew it if the job runs past <time>. D
 Device: <serial> (emulator by default). Personal phone: <not allowed | allowed for C3 only, asked by the user at <time>>.
 Variant of the app: <dev | preview>.
 Criteria:
-- S2 (`maestro`, `screen:light`, `screen:dark`, `screen:font-large`): run flows <flows or tags>; capture <screens> in the variants <list>.
+- S2 (`maestro`, `screen:light`, `screen:dark`, `screen:font-small`): run flows <flows or tags>; capture <screens> in the variants <list>.
 - S4 (`simulated_user`): new flow to write: <what it does>, users <A and B from the development data>, data prefix <prefix>.
 Touch targets: <screens>.
 Evidence folder: <path>. Names: <criterion>-<screen>-<variant>.<ext>.

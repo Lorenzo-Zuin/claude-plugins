@@ -12,10 +12,10 @@ The contract schema of the project (`Contract schema:`) defines the types, the o
 | `web_e2e` | end-to-end tests of the web console (`QA commands:`) | here | the report file |
 | `web_screen` | captures of the console or the website at the declared widths and themes | here | the image files |
 | `ux_review` | the `ux-critic` verdict on mockups or captures | here (web, mockups) or bench (device) | the verdict file in `Evidence:` |
-| `maestro`, `simulated_user`, `screen:<variant>` | the device bench | bench machine | — (write `## Needs bench`) |
+| `maestro`, `simulated_user`, `screen:<variant>` | the device bench: `flow:bench` and the `device-tester` agent | bench machine | — here (write `## Needs bench`); `bench` records them |
 | `eval_result` | the AI evaluation set, run by the user | the user's machine | — (write it in the worklog: "evaluation needed") |
-| `old_app` | the previous release's app against the new server | bench, at release | — |
-| `user_device` | a real phone, in preview | the user | — |
+| `old_app` | the previous release's app against the new server | bench, at release (`flow:bench`) | — here |
+| `user_device` | a real phone: in preview by the user, or on the bench when the user connects a phone and asks | the user, or `flow:bench` | — here |
 
 ## Rules for a result
 

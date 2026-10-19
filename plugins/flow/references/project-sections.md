@@ -35,6 +35,9 @@ If both exist, the file wins. Keys stay in English because the skills look for t
 | `Evidence:` | folder of a work item's evidence, with `<issue>` and `<slug>`, and the image format | `evidence/` inside the work item folder, WebP 540 px wide |
 | `Record evidence:` | the command that sets a criterion's outcome and evidence in the contract | outcomes in the worklog `## Verified` only, and "contract not updated: no command" in the reply |
 | `QA commands:` | the automatic QA commands beyond the tests: web end-to-end, builds, captures of console and website with widths and themes, design checks | qa runs only the tests the plan names |
+| `Bench:` | the bench command and its actions by role: lock status, take, renew, release, check (with the build variant), reset of the local database, flows, capture, variants, touch targets | no device part: `bench` points to the project's manual steps and the device criteria go to the user's manual test script |
+| `Acceptance:` | the file with the bench rules: lock expiry, devices, foreground check, capture method, variants, users and simulated user, flows policy, allowed resets, safety on a personal phone | `bench` and `device-tester` stop with "setup missing" |
+| `App id:` | the identifier of the project's app for each build variant, used by the foreground check before every capture or tap | `device-tester` stops with "setup missing" |
 | `Gate:` | the command that says what is missing before the PR and fails if anything is | qa and handoff check gates G5 and G6 by reading, and say so |
 | `Handoff:` | the command that prepares a work item for its PR (migration timestamps, numbers of decision records and docs, the `phase:P6` label) | handoff does those steps by hand where they apply |
 | `Full check:` | the full verification run that also writes the receipt | the full round of `## Verification commands` |

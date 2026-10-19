@@ -1,6 +1,6 @@
 # flow
 
-Skill di Claude Code per il development flow, dalla richiesta alla release, una phase alla volta. La versione 0.2 copre le phase da P0 a P3, la parte automatica di P5 e P6: le skill `next`, `work`, `spec`, `plan`, `mockup`, `qa` e `handoff`, e l'agente `ux-critic`. Le skill `bench` (P5 sul dispositivo), `release` e `learn` e l'agente `device-tester` arriveranno dopo. I file letti dal modello sono in inglese, come in `orchestra`; questa guida è in italiano.
+Skill di Claude Code per il development flow, dalla richiesta alla release, una phase alla volta. La versione 0.3 copre le phase da P0 a P6: le skill `next`, `work`, `spec`, `plan`, `mockup`, `qa`, `bench` e `handoff`, e gli agenti `ux-critic` e `device-tester`. Le skill `release` e `learn` arriveranno dopo. I file letti dal modello sono in inglese, come in `orchestra`; questa guida è in italiano.
 
 | Skill | Phase | Che cosa fa | Scrive |
 |---|---|---|---|
@@ -10,6 +10,7 @@ Skill di Claude Code per il development flow, dalla richiesta alla release, una 
 | `/flow:plan` | P2 Technical plan | mappa con `explore`, premise controllate dallo script del progetto, disegno, dati di sviluppo, compatibilità, piano dei test, punti critici, task; revisione del `reviewer`; gate G2 | `plan.md` (lane L) o plan breve nel worklog (lane M) |
 | `/flow:mockup` | P3 Mockup | mockup HTML nei due temi e in tutti gli stati della matrix, percorsi con il numero di tocchi, immagini WebP, giudizio dell'agente `ux-critic` con la rubric, correzioni fino a tre giri; gate G3 con la label `mockup-ok` dell'utente | HTML, immagini e verdetti in `evidence/` |
 | `/flow:qa` | P5 QA, parte automatica | prova ogni acceptance criterion che una macchina può provare senza il bench: test, pgTAP, Deno, end-to-end sul sistema locale, console e sito con catture giudicate dal critic; esiti nel contract; sezione «Needs bench» e label `needs-bench` per il dispositivo | evidence, esiti del contract |
+| `/flow:bench` | P5 QA, parte sul dispositivo | sulla macchina del bench: prende il bench lock, esegue il bench check e si ferma al primo problema con il rimedio, poi prova con l'agente `device-tester` i criteri della sezione «Needs bench» del work item più vecchio della bench queue: flow, variant, bersagli di tocco, catture giudicate dal critic; libera il lock alla fine | evidence, esiti del contract, flow nuovi, manual test script |
 | `/flow:handoff` | P6 Handoff | merge dell'integration branch, confronto del codice con la spec da parte del `reviewer`, fragment, note, documenti e dati di sviluppo controllati, comando di handoff del progetto, full check, worklog chiuso, gate, PR dal modello del progetto; la segue fino al verde | PR |
 
 Ogni skill ha un `SKILL.md` sotto le 100 righe; i dettagli sono in `references/`, letti solo quando servono:
@@ -21,12 +22,14 @@ Ogni skill ha un `SKILL.md` sotto le 100 righe; i dettagli sono in `references/`
 | `references/lanes.md` | condizioni delle lane e phase di ogni lane |
 | `references/ux-rubric.md` | rubric UX generica (R1-R16), severity, grado di certezza e giri; il progetto aggiunge la sua parte con `Rubric:` |
 | `agents/ux-critic.md` | l'agente che giudica immagini di mockup e catture, al massimo quattro schermate per chiamata (Sonnet, in sola lettura) |
+| `agents/device-tester.md` | l'agente che guida il bench sotto il lock della sessione: bench check, flow, variant, catture, bersagli di tocco, simulated user; riporta le evidence, non diagnostica e non corregge l'app (Sonnet) |
 | `skills/next/references/state-table.md` | da stato a phase dopo, riga per riga |
 | `skills/work/references/` | percorsi, collisioni, slug, commenti; corpo della issue di riserva |
 | `skills/spec/references/` | completeness matrix generica, domande, modelli della spec, acceptance criteria, istruzioni del `reviewer` per le lacune |
 | `skills/plan/references/` | modelli del plan, premise, istruzioni del `reviewer` per il plan |
 | `skills/mockup/references/` | che cosa disegnare (nomi, stati, percorsi), da HTML a immagini, come chiamare il critic e decidere sui finding contestati |
 | `skills/qa/references/` | come si produce e si registra ogni tipo di evidence; la sezione «Needs bench» |
+| `skills/bench/references/` | lock e bench check con i rimedi permessi, da criterio a comando (flow, variant, bersagli di tocco, registrazione), richiesta al `device-tester` |
 | `skills/handoff/references/` | istruzioni del `reviewer` per il confronto codice-spec, voci da aggiornare, compilazione della PR |
 
 ## Dipendenze
@@ -71,6 +74,9 @@ Nessun file del plugin nomina comandi o percorsi di un progetto. Il progetto li 
 - Evidence: <cartella delle evidence del work item, con <issue> e <slug>, e formato delle immagini> (facoltativo)
 - Record evidence: <comando che scrive esito ed evidence di un acceptance criterion> (facoltativo)
 - QA commands: <comandi di QA automatico oltre ai test: end-to-end della console, build, catture con larghezze e temi, controlli di disegno> (facoltativo)
+- Bench: <comando del bench e le sue azioni: stato, presa, rinnovo e rilascio del lock, check, reset del database locale, flow, cattura, variant, bersagli di tocco> (facoltativo)
+- Acceptance: <file con le regole del bench: scadenza del lock, dispositivi, controllo dell'app in primo piano, cattura, variant, utenti, flow, reset permessi, sicurezza sul telefono personale> (facoltativo)
+- App id: <identificativo dell'app del progetto per ogni variant di build> (facoltativo)
 - Gate: <comando che dice che cosa manca prima della PR> (facoltativo)
 - Handoff: <comando che prepara il work item per la PR> (facoltativo)
 - Full check: <full run che scrive anche la receipt> (facoltativo)
@@ -89,7 +95,7 @@ claude plugin marketplace add <utente>/<repository>
 claude plugin install flow@lorenzo-plugins
 ```
 
-Poi si apre una sessione nuova. Per controllare che funzioni: `/flow:next`, `/flow:work`, `/flow:spec`, `/flow:plan`, `/flow:mockup`, `/flow:qa` e `/flow:handoff` compaiono fra i comandi, e `flow:ux-critic` fra gli agenti (`/agents`).
+Poi si apre una sessione nuova. Per controllare che funzioni: `/flow:next`, `/flow:work`, `/flow:spec`, `/flow:plan`, `/flow:mockup`, `/flow:qa`, `/flow:bench` e `/flow:handoff` compaiono fra i comandi, e `flow:ux-critic` e `flow:device-tester` fra gli agenti (`/agents`).
 
 ## Modificare il plugin
 

@@ -27,7 +27,7 @@ An issue that is not authorized (`ready` or `requested`, without `on-hold`) is n
 5. When the row says to stop, write why and what the user does, with the exact label or answer. Never set an approval label to go on.
 
 ## 5. Skills not written yet
-P5 on the device bench (`bench`), P8 release and P9 learning have no skill in this version of the plugin. When the work item reaches one of them, say so, point to the project's flow guide for the manual steps if CLAUDE.md names one, and stop.
+P8 release and P9 learning have no skill in this version of the plugin. When the work item reaches one of them, say so, point to the project's flow guide for the manual steps if CLAUDE.md names one, and stop. P5 on the device bench is `flow:bench`: it runs only on the bench machine, with the project's `Bench:` key.
 
 ## End
 Close with the `recap` skill (`recap:recap` as a plugin) when available.

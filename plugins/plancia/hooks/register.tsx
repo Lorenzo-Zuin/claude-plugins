@@ -114,6 +114,9 @@ export const register: Register = on => {
   // Tool del thread principale in corso, per capire quando la sessione torna a lavorare.
   let running = 0
   const warned = new Set<string>()
+  // Aperta da sola in session.start, la Plancia resta in attesa sotto le 144 colonne:
+  // al primo prompt la apertura conta come chiesta e si vede a ogni larghezza.
+  let isPaneRetried = false
 
   on('session.start', async ($, e, next) => {
     const commands = [
@@ -256,6 +259,12 @@ export const register: Register = on => {
         workingSince: now,
         prompt: clip(redact(e.text), 800),
       }))
+      if (!isPaneRetried) {
+        isPaneRetried = true
+        // Solo se è ancora aperta e non disegnata: chiusa a mano, resta chiusa.
+        const pane = (await $.ui.panes()).find(p => p.id === PANE)
+        if (pane && !pane.isPlaced) void openPane($)
+      }
     }
     return next(e)
   }).catch(($, e, next) => (next.called ? next(e) : { drop: 'Plancia: controllo dei segreti non riuscito.' }))

@@ -77,6 +77,8 @@ export type SessionInfo = {
   id: string
   // Id della sessione nell'app desktop (local_...), per aprirla con un link claude://.
   hostId?: string
+  // Titolo che l'app dà alla sessione, letto dalla trascrizione.
+  title?: string
   status: SessionStatus
   detail?: string
   since: number

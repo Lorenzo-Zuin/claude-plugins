@@ -31,7 +31,7 @@ import {
   resumeText,
   toggleTodo,
 } from './state'
-import { STALE_MS, openSession } from './sessions'
+import { STALE_MS, dismissSessions, openSession } from './sessions'
 
 const digest = atom({ plugin: 'plancia', key: 'digest' } as const, null)
 const files = atom({ plugin: 'plancia', key: 'files' } as const, [])
@@ -98,7 +98,7 @@ const LOOK: Record<SessionStatus | 'stale', Look> = {
   done: { color: C.green, icon: '✓', label: 'finito', rank: 2 },
   working: { color: C.teal, icon: '●', label: 'al lavoro', rank: 3 },
   idle: { color: C.muted, icon: '○', label: 'in attesa', rank: 4 },
-  stale: { color: C.muted, icon: '◌', label: 'non risponde', rank: 5 },
+  stale: { color: C.muted, icon: '◌', label: 'inattiva', rank: 5 },
   closed: { color: C.muted, icon: '·', label: 'chiusa', rank: 6 },
 }
 
@@ -644,6 +644,7 @@ export async function drawPane($: EngineInterface, e: RenderInput<'Pane'>) {
     const count = (st: SessionStatus) => list.filter(s => s.status === st && now - s.seenAt <= STALE_MS).length
     const totalWork = list.reduce((sum, s) => sum + workOf(s, now), 0)
     const totalUsd = list.reduce((sum, s) => sum + (s.usd ?? 0), 0)
+    const inactive = list.filter(s => s.id !== selfId && now - s.seenAt > STALE_MS)
 
     const summary = (key: string, color: string, n: number, label: string) => (
       <Box key={key} flexDirection="column" flexGrow={1} paddingX={isCss ? 1 : 0} paddingY={isCss ? 'xs' : 0} backgroundColor={isCss ? tint(color, 0.1) : undefined}>
@@ -676,28 +677,36 @@ export async function drawPane($: EngineInterface, e: RenderInput<'Pane'>) {
           paddingY={isCss ? 1 : 0}
         >
           <Box flexDirection="row" justifyContent="space-between" alignItems="center" gap={1}>
-            <Text bold weight="bold" wrap="truncate-middle">
-              <Text color={look.color}>{look.icon} </Text>
-              {s.project}
-              {s.branch ? <Text color={C.pink}> ⎇ {s.branch}</Text> : ''}
-            </Text>
+            <Box flexDirection="column" flexShrink={1}>
+              <Text bold weight="bold" wrap="truncate-end">
+                <Text color={look.color}>{look.icon} </Text>
+                {s.title ?? s.project}
+              </Text>
+              <Text color={isCss ? C.muted : undefined} dimColor={!isCss} size="footnote" wrap="truncate-middle">
+                📁 {s.project}
+                {s.branch ? <Text color={C.pink}> ⎇ {s.branch}</Text> : ''}
+              </Text>
+            </Box>
             {isMe ? (
               <Text color={C.accent} size="caption" weight="semibold">
                 QUESTA SESSIONE
               </Text>
             ) : (
-              s.hostId && (
+              <Box flexDirection="row" gap={1} flexShrink={0} alignItems="center">
+                {s.hostId && (
                 <Button
                   key={`open-${s.id}`}
                   label="↗ Apri"
                   variant={look.rank <= 2 ? 'primary' : 'secondary'}
                   onPress={() =>
                     void openSession($, s.hostId ?? '').then(ok => {
-                      if (!ok) $.ui.toast(`Non riesco ad aprire ${s.project}: cercala nella barra laterale.`)
+                      if (!ok) $.ui.toast(`Non riesco ad aprire ${s.title ?? s.project}: cercala nella barra laterale.`)
                     })
                   }
                 />
-              )
+                )}
+                <Button key={`hide-${s.id}`} label="✕" plain dimColor onPress={() => void dismissSessions($, [s])} />
+              </Box>
             )}
           </Box>
           <Text color={look.color} weight="semibold" wrap="wrap">
@@ -727,10 +736,15 @@ export async function drawPane($: EngineInterface, e: RenderInput<'Pane'>) {
           {Pair('sessioni', String(list.length), 'tn')}
         </Box>
         {list.length === 0 && Muted('Nessuna sessione ancora: compaiono entro 20 secondi.')}
+        {inactive.length > 0 && (
+          <Box flexDirection="row">
+            <Button key="hide-inactive" label={`Togli le ${inactive.length} inattive`} onPress={() => void dismissSessions($, inactive)} />
+          </Box>
+        )}
         <Box flexDirection="column" gap={S.card}>
           {list.map(card)}
         </Box>
-        {Muted('Compaiono le sessioni di questo PC che hanno la Plancia attiva. Si aggiorna ogni 20 secondi. «Apri» porta la sessione in primo piano nell\'app desktop.')}
+        {Muted('Compaiono le sessioni di questo PC che hanno la Plancia attiva. Si aggiorna ogni 20 secondi. «Apri» porta la sessione in primo piano nell\'app desktop; quelle inattive da 30 minuti o ferme da 2 ore spariscono da sole; una sessione tolta ricompare quando cambia stato.')}
       </Box>
     )
   }

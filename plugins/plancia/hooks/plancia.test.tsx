@@ -60,10 +60,10 @@ test('il guardrail chiede conferma prima di un comando distruttivo', async ($, o
   expect(safe.decision).toBe('allow')
 })
 
-test('il pannello disegna ogni scheda su terminale e desktop', async ($, on) => {
-  const clock = mock.clock(on)
+// Le risposte del motore che servono a session.start e a prompt.submit.
+type On = Parameters<Parameters<typeof test>[1]>[1]
+function engine(on: On) {
   mock.store(on)
-  on('ui.open', () => ({ value: { isPlaced: true } }))
   on('prompt.fill', () => ({ isFilled: true }))
   on('command.register', (_, e) => ({ value: { command: e.name } }))
   on('tool.register', () => ({ value: { tool: 'mcp__plancia__todo' } }))
@@ -75,6 +75,36 @@ test('il pannello disegna ogni scheda su terminale e desktop', async ($, on) => 
   on('session.id', () => ({ value: 's1' }))
   on('session.start', (_, e) => ({ cwd: e.cwd }))
   mock.env(on, { USERPROFILE: 'C:/Users/prova' })
+}
+
+test('al primo prompt apre la Plancia rimasta in attesa', async ($, on) => {
+  mock.clock(on)
+  engine(on)
+  on('fs.write', () => ({ value: undefined }))
+  on('fs.list', () => ({ value: [] }))
+  on('fs.read', () => {
+    throw new Error('file assente')
+  })
+  const opens: string[] = []
+  // Terminale stretto: aperta senza richiesta, resta non disegnata.
+  const isPlaced = false
+  on('ui.open', (_, e) => (opens.push(e.id), { value: { isPlaced, reason: '120 colonne' } }))
+  on('ui.panes', () => ({ value: [{ id: 'plancia', title: 'Plancia', isShown: false, isFocused: false, isPlaced }] }))
+  on('prompt.submit', (_, e) => ({ text: e.text }))
+
+  await $.session.start({ cwd: '/lavoro/demo', surface: 'terminal', isInteractive: true })
+  expect(opens.length).toBe(1)
+  await $.prompt.submit({ text: 'ciao' })
+  expect(opens.length).toBe(2)
+  // Una volta sola per sessione: se poi la chiudi, il prompt dopo non la riapre.
+  await $.prompt.submit({ text: 'ancora' })
+  expect(opens.length).toBe(2)
+})
+
+test('il pannello disegna ogni scheda su terminale e desktop', async ($, on) => {
+  const clock = mock.clock(on)
+  engine(on)
+  on('ui.open', () => ({ value: { isPlaced: true } }))
   const now = clock.now()
   const other = {
     id: 's2',

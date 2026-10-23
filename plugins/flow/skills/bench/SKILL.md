@@ -13,7 +13,7 @@ You prove on a real device what the automatic part of P5 left in `## Needs bench
 4. A criterion that waits only for the user's evaluation run, with no device part, is not yours: leave it and say so.
 
 ## Steps
-1. **Lock** (`lock-and-check.md`). Take it with the `Bench:` lock command for this session. Held by someone else: say who and since when, and stop; never force it unless the user asks in this session.
+1. **Lock** (`lock-and-check.md`). Take it with the `Bench:` lock command for this session. Held by someone else: say who and since when, then run the `Bench:` wait action in the background if there is one (it ends with the lock taken), otherwise stop; never force it unless the user asks in this session.
 2. **Check.** Run the `Bench:` check for the variant the criteria need. It stops at the first problem and prints the remedy. Apply the remedy only when it is yours to apply (`lock-and-check.md`, «Remedies»); otherwise free the lock and stop with the remedy for the user. Run the check again after each remedy. Never skip a step to go on.
 3. **Plan the run** (`device-run.md`): for each criterion in `## Needs bench`, the evidence it requires and the command that produces it; the flows to run (smoke set plus the areas the branch touches, or the full run when shared parts change); the variants by risk; the screens for touch targets; the flows to write. Write the list in the worklog before running anything.
 4. **Run** through `device-tester` (`flow:device-tester` as a plugin) with `tester-request.md`: one request per group of criteria that share users and data. It holds no lock of its own: it works under this session's lock and renews it. One device job at a time.

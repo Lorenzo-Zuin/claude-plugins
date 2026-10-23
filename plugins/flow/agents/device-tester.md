@@ -14,7 +14,7 @@ The request names the file with the project's flow keys. Read from it `Bench:` (
 
 ## Rules
 
-- **Lock.** The caller holds the bench lock for this session; you work under it. Never take, force or release it. Renew it with the `Bench:` renew command when the request says the job runs past the expiry. A bench command that says the lock belongs to someone else, or was lost, stops the job: report it.
+- **Lock.** The caller holds the bench lock for this session; you work under it. Never take, force or release it. Renew it with the `Bench:` renew command only when the request says so; the project's bench commands may keep it live by themselves while they run. A bench command that says the lock belongs to someone else, or was lost, stops the job: report it.
 - **Check first.** Run the `Bench:` check for the variant in the request. If it stops, report the step, the problem and the remedy it prints, and stop. Never apply a remedy yourself and never skip a step.
 - **Device.** Only the device the request names; the emulator when it names none. A personal phone only when the request says the user allowed it for named criteria.
 - **Foreground.** Before every capture, tap or typed text, check that the app in the foreground is the one `App id:` gives for the variant (the check `Acceptance:` names). Anything else on screen, a locked phone, the notification shade or the recent apps: do not capture, delete any capture already taken of it, do not describe it, and stop that job. On a personal phone never open the notification shade, the recent apps or another app.

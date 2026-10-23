@@ -6,16 +6,17 @@ Emulator, local server stack, development server of the app and phone are shared
 
 | Action | When |
 |---|---|
-| status | before taking it, to say who holds it |
+| status | before taking it, to say who holds it and what runs |
 | take (for a session) | at step 1, before the check; it puts the device back in its normal state (theme, font size, screen) |
-| renew | before the expiry `Acceptance:` names, when no bench command ran since; bench commands that use the device renew it themselves while they run |
+| wait | the lock is held by someone else: run it in the background (the session's background command, not a loop in the session); it queues, polls inside the command and ends with the lock taken, in order of arrival |
+| renew | only if the project has one and `Acceptance:` asks for it; where the lock lives while a bench command runs and frees itself after an idle time, never renew it by hand |
 | release | at the end of the run, also after a stop or an error |
 | force release | only when the user asks in this session; it asks for confirmation and logs who forced it |
 | take for the user | never from a session: it is the user's lock for manual tests |
 
 - The holder is the session. A subagent started by this session runs in the same session, so the bench commands it runs renew this session's lock instead of taking a new one. If a command says the lock belongs to someone else, stop: never take it back by force.
-- Held by the user (a manual test) or by another session: say who, since when and until when, and stop. Do not wait in a loop.
-- A run longer than the expiry renews between steps. A lock lost in the middle (forced, expired) stops the run: what ran after the loss is not evidence.
+- Held by the user (a manual test) or by another session: say who and since when. With a wait action, run it in the background and go on with work that does not need the device; the session resumes when the command ends with the lock. Without one, stop. Never wait in a loop in the session, and never hold the lock while waiting for a person: free it, or let the idle time free it.
+- Run the bench commands one after the other without long pauses: where the lock frees itself after an idle time, a pause longer than that loses it. A lock lost in the middle (forced, expired) stops the run: what ran after the loss is not evidence; wait for it again.
 
 ## The check
 

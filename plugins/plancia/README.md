@@ -10,7 +10,7 @@ Pannello laterale e banda sopra il prompt per Claude Code. Mostra consumo e limi
 |---|---|
 | Banda sopra il prompt | progetto e ramo, contesto, finestra di 5 ore con l'ora prevista di esaurimento, tempo di lavoro della sessione, costo, sessioni che aspettano una risposta o hanno finito, todo aperti |
 | Scheda Cruscotto | anelli di contesto, 5 ore e 7 giorni; costo, chiamate ai tool e turni; durata dei turni; file modificati |
-| Scheda Sessioni | le sessioni del PC con la Plancia attiva: stato (al lavoro, serve te, forse serve te, finito, in attesa, non risponde), ultima richiesta o ultimo riassunto, tempo di lavoro, costo, contesto |
+| Scheda Sessioni | le sessioni del PC con la Plancia attiva: stato (al lavoro, serve te, forse serve te, finito, in attesa, non risponde), ultima richiesta o ultimo riassunto, tempo di lavoro, costo, contesto; il bottone «Apri» porta la sessione in primo piano nell'app desktop |
 | Scheda Attività | todo del progetto, idee per dopo, prompt riusabili; il pulsante «Riprendi con Claude» scrive nel prompt todo e ultime attività |
 | Scheda Diario | una riga per turno riassunta da Haiku, tempo dei turni per progetto oggi e negli ultimi 7 giorni, copia del riepilogo di oggi |
 | Scheda Regole | le regole attive e gli interventi della sessione |

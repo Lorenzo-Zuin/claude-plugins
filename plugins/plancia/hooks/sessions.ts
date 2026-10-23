@@ -32,10 +32,12 @@ export async function publishStatus($: EngineInterface, change: Partial<SessionI
   const list = await read($, turns)
   const prev = await read($, self)
   const status = change.status ?? prev?.status ?? 'idle'
+  const hostId = prev?.hostId ?? (await $.env.get('CLAUDE_CODE_HOST_SESSION_ID'))
   const next: SessionInfo = {
     ...prev,
     ...change,
     id,
+    hostId,
     status,
     since: status !== prev?.status ? now : (prev?.since ?? now),
     seenAt: now,
@@ -62,6 +64,21 @@ export async function setDetail($: EngineInterface, detail: string) {
   const prev = await read($, self)
   if (prev?.detail === detail && prev.status === 'working') return
   await publishStatus($, { status: 'working', detail: clip(detail, 80) })
+}
+
+// Apre una sessione dell'app desktop con il suo link claude://, attraverso il sistema operativo.
+export async function openSession($: EngineInterface, hostId: string) {
+  if (!/^local_[0-9a-f-]{36}$/.test(hostId)) return false
+  const url = `claude://claude.ai/epitaxy/${hostId}`
+  const isWindows = (await $.env.get('OS')) === 'Windows_NT'
+  const isMac = !isWindows && (await $.env.get('__CFBundleIdentifier')) !== undefined
+  const argv = isWindows ? ['cmd', '/c', 'start', '', url] : isMac ? ['open', url] : ['xdg-open', url]
+  try {
+    const r = await $.process.run(argv, { timeoutMs: 5000 })
+    return r.exitCode === 0
+  } catch {
+    return false
+  }
 }
 
 export type Change = { session: SessionInfo; kind: 'needs-you' | 'maybe-you' | 'done' }

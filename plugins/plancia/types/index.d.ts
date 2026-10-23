@@ -75,6 +75,8 @@ export type SessionStatus = 'working' | 'needs-you' | 'maybe-you' | 'done' | 'id
 
 export type SessionInfo = {
   id: string
+  // Id della sessione nell'app desktop (local_...), per aprirla con un link claude://.
+  hostId?: string
   status: SessionStatus
   detail?: string
   since: number

@@ -1,0 +1,16 @@
+{
+  "name": "plancia",
+  "description": "Pannello e banda per Claude Code: consumo e limiti, sessioni attive con il loro stato, diario tra sessioni, todo e prompt riusabili, conferme sui comandi rischiosi.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Lorenzo Zuin"
+  },
+  "keywords": [
+    "dashboard",
+    "sessions",
+    "journal",
+    "todo",
+    "guardrail"
+  ],
+  "types": "./types/index.d.ts"
+}

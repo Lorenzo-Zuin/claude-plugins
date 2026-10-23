@@ -31,7 +31,7 @@ import {
   resumeText,
   toggleTodo,
 } from './state'
-import { STALE_MS } from './sessions'
+import { STALE_MS, openSession } from './sessions'
 
 const digest = atom({ plugin: 'plancia', key: 'digest' } as const, null)
 const files = atom({ plugin: 'plancia', key: 'files' } as const, [])
@@ -675,16 +675,29 @@ export async function drawPane($: EngineInterface, e: RenderInput<'Pane'>) {
           paddingX={isCss ? 2 : 1}
           paddingY={isCss ? 1 : 0}
         >
-          <Box flexDirection="row" justifyContent="space-between" gap={1}>
+          <Box flexDirection="row" justifyContent="space-between" alignItems="center" gap={1}>
             <Text bold weight="bold" wrap="truncate-middle">
               <Text color={look.color}>{look.icon} </Text>
               {s.project}
               {s.branch ? <Text color={C.pink}> ⎇ {s.branch}</Text> : ''}
             </Text>
-            {isMe && (
+            {isMe ? (
               <Text color={C.accent} size="caption" weight="semibold">
                 QUESTA SESSIONE
               </Text>
+            ) : (
+              s.hostId && (
+                <Button
+                  key={`open-${s.id}`}
+                  label="↗ Apri"
+                  variant={look.rank <= 2 ? 'primary' : 'secondary'}
+                  onPress={() =>
+                    void openSession($, s.hostId ?? '').then(ok => {
+                      if (!ok) $.ui.toast(`Non riesco ad aprire ${s.project}: cercala nella barra laterale.`)
+                    })
+                  }
+                />
+              )
             )}
           </Box>
           <Text color={look.color} weight="semibold" wrap="wrap">
@@ -717,7 +730,7 @@ export async function drawPane($: EngineInterface, e: RenderInput<'Pane'>) {
         <Box flexDirection="column" gap={S.card}>
           {list.map(card)}
         </Box>
-        {Muted('Compaiono le sessioni di questo PC che hanno la Plancia attiva. Si aggiorna ogni 20 secondi.')}
+        {Muted('Compaiono le sessioni di questo PC che hanno la Plancia attiva. Si aggiorna ogni 20 secondi. «Apri» porta la sessione in primo piano nell\'app desktop.')}
       </Box>
     )
   }

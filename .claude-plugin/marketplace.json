@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Plugin di Claude Code di Lorenzo Zuin: audit-fix, flow, orchestra, plancia, recap e lo spazio per le skill dei progetti.",
-    "version": "1.4.0"
+    "version": "1.4.1"
   },
   "plugins": [
     {
@@ -30,7 +30,7 @@
       "name": "plancia",
       "source": "./plugins/plancia",
       "description": "Pannello e banda per Claude Code: consumo e limiti, sessioni attive con il loro stato, diario tra sessioni, todo e prompt riusabili, conferme sui comandi rischiosi.",
-      "version": "0.1.0"
+      "version": "0.2.0"
     },
     {
       "name": "recap",

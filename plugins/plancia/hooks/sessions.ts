@@ -14,13 +14,42 @@ const project = atom({ plugin: 'plancia', key: 'project' } as const, null)
 const gauge = atom({ plugin: 'plancia', key: 'gauge' } as const, null)
 const turns = atom({ plugin: 'plancia', key: 'turns' } as const, [])
 
-// Oltre questo silenzio una sessione non risponde; oltre il secondo non si mostra più.
+// Oltre il primo silenzio una sessione è inattiva (l'app l'ha chiusa o sospesa);
+// oltre il secondo non si mostra più. I file più vecchi del terzo non si leggono neanche.
 export const STALE_MS = 3 * 60_000
-const HIDE_MS = 12 * 3_600_000
+const HIDE_MS = 30 * 60_000
+const IGNORE_MS = 12 * 3_600_000
+
+// Una sessione aperta ma ferma (in attesa, finita, in errore) da più di così non si mostra.
+const IDLE_HIDE_MS = 2 * 3_600_000
+const RESTING = ['idle', 'done', 'error']
+
+// Trascrizioni più grandi di così non si leggono per cercare il titolo.
+const MAX_TRANSCRIPT = 40 * 1024 * 1024
+
+async function claudeDir($: EngineInterface) {
+  const configured = await $.env.get('CLAUDE_CONFIG_DIR')
+  if (configured) return configured.replace(/\\/g, '/')
+  const home = (await $.env.get('USERPROFILE')) ?? (await $.env.get('HOME')) ?? '.'
+  return `${home.replace(/\\/g, '/')}/.claude`
+}
 
 async function folder($: EngineInterface) {
-  const home = (await $.env.get('USERPROFILE')) ?? (await $.env.get('HOME')) ?? '.'
-  return `${home.replace(/\\/g, '/')}/.claude/plancia/sessions`
+  return `${await claudeDir($)}/plancia/sessions`
+}
+
+// Sessioni tolte a mano, comuni a tutte le sessioni: id → istante dell'ultimo cambio di stato visto.
+// Una sessione tolta ricompare quando cambia stato, non a ogni battito.
+async function dismissedFile($: EngineInterface) {
+  return `${await claudeDir($)}/plancia/dismissed.json`
+}
+
+async function readDismissed($: EngineInterface): Promise<Record<string, number>> {
+  try {
+    return JSON.parse(String(await $.fs.read(await dismissedFile($)))) as Record<string, number>
+  } catch {
+    return {}
+  }
 }
 
 // Aggiorna lo stato di questa sessione e lo scrive nel suo file.
@@ -81,6 +110,56 @@ export async function openSession($: EngineInterface, hostId: string) {
   }
 }
 
+// Dove sta la trascrizione di questa sessione: la cartella del progetto con i caratteri non alfanumerici
+// sostituiti da «-»; se non c'è (la sessione ha cambiato cartella), si cerca tra i progetti.
+const transcripts = new Map<string, string>()
+
+async function transcriptOf($: EngineInterface, id: string) {
+  const known = transcripts.get(id)
+  if (known) return known
+  const projects = `${await claudeDir($)}/projects`
+  const guess = `${projects}/${(await $.session.cwd()).replace(/[^A-Za-z0-9]/g, '-')}/${id}.jsonl`
+  if (await $.fs.exists(guess)) {
+    transcripts.set(id, guess)
+    return guess
+  }
+  for (const dir of await $.fs.list(projects)) {
+    const path = `${projects}/${dir.name}/${id}.jsonl`
+    if (dir.kind === 'dir' && (await $.fs.exists(path))) {
+      transcripts.set(id, path)
+      return path
+    }
+  }
+  return undefined
+}
+
+// Legge l'ultimo titolo che l'app ha scritto nella trascrizione e lo pubblica.
+export async function refreshTitle($: EngineInterface) {
+  try {
+    const id = await $.session.id()
+    const path = await transcriptOf($, id)
+    if (!path || (await $.fs.stat(path)).size > MAX_TRANSCRIPT) return
+    const text = String(await $.fs.read(path))
+    const found = [...text.matchAll(/"type":"custom-title","customTitle":"((?:[^"\\]|\\.)*)"/g)].pop()?.[1]
+    if (!found) return
+    const title = JSON.parse(`"${found}"`) as string
+    if (title !== (await read($, self))?.title) await publishStatus($, { title })
+  } catch {
+    // Senza titolo la card mostra la cartella del progetto.
+  }
+}
+
+// Toglie dall'elenco le sessioni indicate finché non danno un nuovo battito.
+export async function dismissSessions($: EngineInterface, list: SessionInfo[]) {
+  const now = await $.clock.now()
+  const stored = await readDismissed($)
+  for (const s of list) stored[s.id] = s.since
+  // Si tengono solo le voci recenti: un id vecchio non torna più.
+  for (const [id, at] of Object.entries(stored)) if (now - at > IGNORE_MS * 2) delete stored[id]
+  await $.fs.write(await dismissedFile($), JSON.stringify(stored))
+  await update($, sessions, cur => cur.filter(s => !list.some(x => x.id === s.id)))
+}
+
 export type Change = { session: SessionInfo; kind: 'needs-you' | 'maybe-you' | 'done' }
 
 // Rilegge tutte le sessioni e dice quali sono appena passate a «serve te» o «finito».
@@ -94,12 +173,16 @@ export async function refreshSessions($: EngineInterface): Promise<Change[]> {
   } catch {
     return []
   }
+  const dismissed = await readDismissed($)
   const found: SessionInfo[] = []
   for (const entry of names) {
-    if (!entry.name.endsWith('.json') || now - entry.mtimeMs > HIDE_MS) continue
+    if (!entry.name.endsWith('.json') || now - entry.mtimeMs > IGNORE_MS) continue
     try {
       const s = JSON.parse(String(await $.fs.read(`${dir}/${entry.name}`))) as SessionInfo
-      if (s.status !== 'closed') found.push(s)
+      const hiddenSince = dismissed[s.id]
+      const isDismissed = hiddenSince !== undefined && s.since <= hiddenSince
+      const isResting = RESTING.includes(s.status) && now - s.since > IDLE_HIDE_MS
+      if (s.id === mine || (s.status !== 'closed' && !isDismissed && !isResting && now - s.seenAt <= HIDE_MS)) found.push(s)
     } catch {
       // File scritto a metà da un'altra sessione: si rilegge al giro dopo.
     }

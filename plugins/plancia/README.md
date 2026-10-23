@@ -10,7 +10,7 @@ Pannello laterale e banda sopra il prompt per Claude Code. Mostra consumo e limi
 |---|---|
 | Banda sopra il prompt | progetto e ramo, contesto, finestra di 5 ore con l'ora prevista di esaurimento, tempo di lavoro della sessione, costo, sessioni che aspettano una risposta o hanno finito, todo aperti |
 | Scheda Cruscotto | anelli di contesto, 5 ore e 7 giorni; costo, chiamate ai tool e turni; durata dei turni; file modificati |
-| Scheda Sessioni | le sessioni del PC con la Plancia attiva: stato (al lavoro, serve te, forse serve te, finito, in attesa, non risponde), ultima richiesta o ultimo riassunto, tempo di lavoro, costo, contesto; il bottone «Apri» porta la sessione in primo piano nell'app desktop |
+| Scheda Sessioni | le sessioni del PC con la Plancia attiva: stato (al lavoro, serve te, forse serve te, finito, in attesa, non risponde), ultima richiesta o ultimo riassunto, tempo di lavoro, costo, contesto; ogni card ha il titolo che l'app dà alla sessione, il bottone «Apri» per portarla in primo piano e «✕» per toglierla (ricompare quando cambia stato); le sessioni inattive da 30 minuti o ferme da 2 ore spariscono da sole |
 | Scheda Attività | todo del progetto, idee per dopo, prompt riusabili; il pulsante «Riprendi con Claude» scrive nel prompt todo e ultime attività |
 | Scheda Diario | una riga per turno riassunta da Haiku, tempo dei turni per progetto oggi e negli ultimi 7 giorni, copia del riepilogo di oggi |
 | Scheda Regole | le regole attive e gli interventi della sessione |
@@ -46,7 +46,9 @@ Un plugin di policy installato dall'organizzazione ha la precedenza e può inter
 Tutto resta sul PC:
 
 - todo, idee, prompt riusabili e diario nello store del plugin di Claude Code (il diario tiene 45 giorni);
-- lo stato di ogni sessione in `~/.claude/plancia/sessions/<id>.json`, letto dalle altre sessioni ogni 20 secondi.
+- lo stato di ogni sessione in `~/.claude/plancia/sessions/<id>.json`, letto dalle altre sessioni ogni 20 secondi;
+- il titolo della sessione si legge dalla sua trascrizione in `~/.claude/projects/`;
+- le sessioni tolte a mano in `~/.claude/plancia/dismissed.json`, comune a tutte le sessioni.
 
 Il diario contiene i riassunti dei turni: può contenere nomi di progetti e di clienti. I riassunti si generano con Haiku attraverso il client della sessione; il testo inviato è ripulito dai formati di segreti noti.
 

@@ -87,9 +87,16 @@ test('il pannello disegna ogni scheda su terminale e desktop', async ($, on) => 
     workSeconds: 600,
     turns: 4,
   }
-  on('fs.write', () => ({ value: undefined }))
+  // Un piccolo disco in memoria: il file della sessione s2 e quello che la Plancia scrive.
+  const disk = new Map<string, string>([['C:/Users/prova/.claude/plancia/sessions/s2.json', JSON.stringify(other)]])
+  const norm = (path: string) => path.replace(/\\/g, '/')
+  on('fs.write', (_, e) => (disk.set(norm(e.path), e.text), { value: undefined }))
   on('fs.list', () => ({ value: [{ name: 's2.json', kind: 'file', size: 10, mtimeMs: now, isLink: false }] }))
-  on('fs.read', () => ({ value: JSON.stringify(other) }))
+  on('fs.read', (_, e) => {
+    const text = disk.get(norm(e.path))
+    if (text === undefined) throw new Error('file assente')
+    return { value: text }
+  })
 
   await $.session.start({ cwd: '/lavoro/demo', surface: 'desktop', isInteractive: true })
   await $.command.run({ command: 'todo', args: 'Sistemare la paginazione' } as Parameters<typeof $.command.run>[0])
@@ -101,6 +108,13 @@ test('il pannello disegna ogni scheda su terminale e desktop', async ($, on) => 
     await ui.press({ key: 'tab-sessioni' })
     expect(await ui.find({ type: 'Text', text: /altro-progetto/ })).toBeDefined()
     expect(await ui.find({ type: 'Text', text: /serve te · permesso per Bash/ })).toBeDefined()
+    if (surface === 'desktop') {
+      // Tolta con ✕, non ricompare al giro di lettura dopo, anche se il suo battito continua.
+      await ui.press({ key: 'hide-s2' })
+      disk.set('C:/Users/prova/.claude/plancia/sessions/s2.json', JSON.stringify({ ...other, seenAt: now + 20_000 }))
+      await clock.advance(20_000)
+      expect(await ui.find({ type: 'Text', text: /altro-progetto/ })).toBeUndefined()
+    }
 
     await ui.press({ key: 'tab-attivita' })
     expect(await ui.find({ type: 'Text', text: /TODO DEL PROGETTO · 1 aperti/i })).toBeDefined()

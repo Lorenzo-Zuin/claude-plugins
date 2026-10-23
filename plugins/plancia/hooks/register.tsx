@@ -19,7 +19,7 @@ import {
   saveSnippet,
   toggleTodo,
 } from './state'
-import { publishStatus, refreshSessions, setDetail } from './sessions'
+import { publishStatus, refreshSessions, refreshTitle, setDetail } from './sessions'
 import { PANE, drawBand, drawPane, standupText } from './ui'
 
 const files = atom({ plugin: 'plancia', key: 'files' } as const, [])
@@ -162,6 +162,7 @@ export const register: Register = on => {
     const prev = await read($, self)
     await publishStatus($, { status: prev?.status ?? 'idle', startedAt: usage.startedAt })
     await refreshSessions($)
+    void refreshTitle($)
     $.clock.every(20_000, () => void heartbeat($))
     void openPane($)
 
@@ -469,6 +470,8 @@ export const register: Register = on => {
             project: p.name,
           })
           await publishStatus($, { lastSummary: summary })
+          // L'app dà o cambia il titolo dopo i primi turni.
+          await refreshTitle($)
           await refreshDigest($)
         })()
       })

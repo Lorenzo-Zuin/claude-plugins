@@ -4,8 +4,8 @@
     "name": "Lorenzo Zuin"
   },
   "metadata": {
-    "description": "Plugin di Claude Code di Lorenzo Zuin: audit-fix, flow, orchestra, recap e lo spazio per le skill dei progetti.",
-    "version": "1.3.0"
+    "description": "Plugin di Claude Code di Lorenzo Zuin: audit-fix, flow, orchestra, plancia, recap e lo spazio per le skill dei progetti.",
+    "version": "1.4.0"
   },
   "plugins": [
     {
@@ -25,6 +25,12 @@
       "source": "./plugins/orchestra",
       "description": "La sessione principale pianifica, delega ai subagent (explore, implementer, verifier, reviewer) e rivede; tiene un registro delle deleghe per progetto.",
       "version": "1.3.1"
+    },
+    {
+      "name": "plancia",
+      "source": "./plugins/plancia",
+      "description": "Pannello e banda per Claude Code: consumo e limiti, sessioni attive con il loro stato, diario tra sessioni, todo e prompt riusabili, conferme sui comandi rischiosi.",
+      "version": "0.1.0"
     },
     {
       "name": "recap",

@@ -1,12 +1,13 @@
 # Plugin di Claude Code
 
-Marketplace di plugin di Claude Code: un repository GitHub che Claude Code legge per installare plugin. Contiene `audit-fix`, `flow`, `orchestra` e `recap`.
+Marketplace di plugin di Claude Code: un repository GitHub che Claude Code legge per installare plugin. Contiene `audit-fix`, `flow`, `orchestra`, `plancia` e `recap`.
 
 | Plugin | Che cosa fa | Comando |
 |---|---|---|
 | [audit-fix](plugins/audit-fix/README.md) | lavora un rapporto di audit automatico (versioni, sicurezza, fornitori): verifica alla fonte, corregge nel repository, consegna i passi a mano e le migliorie per chi ha scritto il rapporto | `/audit-fix:audit-fix <issue>` |
 | [flow](plugins/flow/README.md) | il development flow una phase alla volta: la phase dopo o la prossima issue autorizzata, triage (P0), spec con completeness matrix (P1), technical plan con premise controllate (P2), mockup giudicati dall'agente `ux-critic` (P3), QA automatico (P5), prove sul dispositivo con l'agente `device-tester` e il bench lock (P5), handoff con la PR (P6) | `/flow:next`, `/flow:work`, `/flow:spec`, `/flow:plan`, `/flow:mockup`, `/flow:qa`, `/flow:bench`, `/flow:handoff` |
 | [orchestra](plugins/orchestra/README.md) | la sessione principale pianifica, delega ai subagent e rivede; registro delle deleghe per progetto | `/orchestra:orchestra <compito>` |
+| [plancia](plugins/plancia/README.md) | pannello e banda: consumo e limiti, sessioni attive con il loro stato, diario tra sessioni, todo e prompt riusabili, conferme sui comandi rischiosi | `/plancia`, `/todo`, `/oggi`, `/riprendi` |
 | [recap](plugins/recap/README.md) | dà una forma fissa al messaggio finale di ogni lavoro: stato, ciò che non è fatto, avvertenze, i tuoi passi con i comandi, le domande con le risposte pronte, il fatto in una riga, il prompt per continuare | da sola, oppure `/recap:recap` |
 
 ## Struttura
@@ -30,6 +31,11 @@ plugins/
     skills/orchestra/SKILL.md       le regole della sessione principale
     agents/                         explore, implementer (tre livelli), verifier, reviewer
     README.md
+  plancia/
+    .claude-plugin/plugin.json
+    hooks/                          il modulo di hook della mod (register.tsx), con i test
+    types/index.d.ts                il contratto dello stato della mod
+    README.md
   recap/
     .claude-plugin/plugin.json
     skills/recap/SKILL.md           la forma del messaggio finale, con references/examples.md
@@ -48,6 +54,7 @@ claude plugin marketplace add <utente>/<repository>
 claude plugin install audit-fix@lorenzo-plugins
 claude plugin install flow@lorenzo-plugins
 claude plugin install orchestra@lorenzo-plugins
+claude plugin install plancia@lorenzo-plugins
 claude plugin install recap@lorenzo-plugins
 ```
 
@@ -66,6 +73,7 @@ Nel `.claude/settings.json` del progetto:
     "audit-fix@lorenzo-plugins": true,
     "flow@lorenzo-plugins": true,
     "orchestra@lorenzo-plugins": true,
+    "plancia@lorenzo-plugins": true,
     "recap@lorenzo-plugins": true
   }
 }

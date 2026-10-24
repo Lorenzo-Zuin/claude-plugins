@@ -18,7 +18,7 @@
       "name": "flow",
       "source": "./plugins/flow",
       "description": "Development flow una phase alla volta: next (la phase dopo o la prossima issue autorizzata), work (P0 triage), spec (P1 spec con completeness matrix), plan (P2 technical plan con premise controllate), mockup (P3 mockup giudicati dall'agente ux-critic con la rubric), qa (P5 parte automatica), bench (P5 sul dispositivo con l'agente device-tester), handoff (P6 PR).",
-      "version": "0.3.2"
+      "version": "0.3.3"
     },
     {
       "name": "orchestra",

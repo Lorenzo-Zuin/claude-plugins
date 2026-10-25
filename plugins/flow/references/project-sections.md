@@ -40,6 +40,7 @@ If both exist, the file wins. Keys stay in English because the skills look for t
 | `App id:` | the identifier of the project's app for each build variant, used by the foreground check before every capture or tap | `device-tester` stops with "setup missing" |
 | `Gate:` | the command that says what is missing before the PR and fails if anything is | qa and handoff check gates G5 and G6 by reading, and say so |
 | `Handoff:` | the command that prepares a work item for its PR (migration timestamps, numbers of decision records and docs, the `phase:P6` label) | handoff does those steps by hand where they apply |
+| `Docs check:` | the command that checks the text files against the branch (paths and commands removed, broken links, infrastructure not named) and lists the documents to reread, with the line to write in the worklog | handoff searches every text file for the paths and commands the branch removed or changed |
 | `Full check:` | the full verification run that also writes the receipt | the full round of `## Verification commands` |
 | `PR template:` | the pull request template | the repository's template, else `skills/handoff/references/pr.md` |
 | `Merge:` | who may merge a work item's PR into the integration branch, and on which conditions | the merge is the user's |

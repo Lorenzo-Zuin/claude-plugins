@@ -79,6 +79,7 @@ Nessun file del plugin nomina comandi o percorsi di un progetto. Il progetto li 
 - App id: <identificativo dell'app del progetto per ogni variant di build> (facoltativo)
 - Gate: <comando che dice che cosa manca prima della PR> (facoltativo)
 - Handoff: <comando che prepara il work item per la PR> (facoltativo)
+- Docs check: <comando che controlla i file di testo contro il branch ed elenca i documenti da rileggere, con la riga da scrivere nel worklog> (facoltativo)
 - Full check: <full run che scrive anche la receipt> (facoltativo)
 - PR template: <modello della PR> (facoltativo)
 - Merge: <chi può fare il merge della PR nell'integration branch, e a quali condizioni> (facoltativo)

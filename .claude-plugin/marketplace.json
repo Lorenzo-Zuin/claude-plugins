@@ -42,7 +42,7 @@
       "name": "scrittura-testi",
       "source": "./plugins/scrittura-testi",
       "description": "Regole per scrivere e rivedere testi in italiano destinati a una persona: documenti di analisi e per il cliente, ADR, note, commit, messaggi dell'interfaccia, rendiconti, email.",
-      "version": "1.0.0"
+      "version": "1.0.1"
     }
   ]
 }

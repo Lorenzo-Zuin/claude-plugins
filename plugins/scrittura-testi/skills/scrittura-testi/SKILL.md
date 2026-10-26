@@ -16,7 +16,7 @@ Chi legge è una persona competente con poco tempo. Il testo dice che cosa è, c
 ## Forma
 
 - Frasi corte, una idea per frase, verbi normali. Niente tono commerciale, niente entusiasmo, niente punti esclamativi, niente emoji, niente linguaggio aulico.
-- Impersonale: «si aggiorna», «non si può cambiare». Il prodotto non dà del tu.
+- Impersonale: «non si può cambiare». Il prodotto non dà del tu.
 - Mai la forma riflessiva con il sistema come soggetto sottinteso: «una segnalazione già inviata non si ritira», «il periodo non si ricalcola da solo», «si riallineano da soli». O si dice chi fa che cosa («nessuno ricalcola il periodo chiuso»), o la frase si toglie.
 - Concreto: numeri e nomi veri al posto degli aggettivi. «Indietro di due giorni», non «leggermente indietro».
 - Un'informazione sta in un posto solo. Altrove si rimanda.

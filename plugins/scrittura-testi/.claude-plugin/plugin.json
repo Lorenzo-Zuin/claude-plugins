@@ -1,0 +1,14 @@
+{
+  "name": "scrittura-testi",
+  "description": "Guidelines for writing or revising Italian texts meant for a person: analysis documents, customer documents, ADRs, notes, commits, UI messages, work reports, emails.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Lorenzo Zuin"
+  },
+  "keywords": [
+    "writing",
+    "italian",
+    "style",
+    "review"
+  ]
+}

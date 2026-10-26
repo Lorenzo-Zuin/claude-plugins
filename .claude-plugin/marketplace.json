@@ -4,8 +4,8 @@
     "name": "Lorenzo Zuin"
   },
   "metadata": {
-    "description": "Plugin di Claude Code di Lorenzo Zuin: audit-fix, flow, orchestra, plancia, recap e lo spazio per le skill dei progetti.",
-    "version": "1.4.4"
+    "description": "Plugin di Claude Code di Lorenzo Zuin: audit-fix, flow, orchestra, plancia, recap, scrittura-testi e lo spazio per le skill dei progetti.",
+    "version": "1.5.0"
   },
   "plugins": [
     {
@@ -36,6 +36,12 @@
       "name": "recap",
       "source": "./plugins/recap",
       "description": "Dà una forma fissa al messaggio finale di ogni lavoro: stato in una riga, che cosa è fatto, che cosa manca e chi lo fa, i tuoi passi con i comandi esatti, le domande con le risposte pronte e il prompt per una sessione nuova.",
+      "version": "1.0.1"
+    },
+    {
+      "name": "scrittura-testi",
+      "source": "./plugins/scrittura-testi",
+      "description": "Regole per scrivere e rivedere testi in italiano destinati a una persona: documenti di analisi e per il cliente, ADR, note, commit, messaggi dell'interfaccia, rendiconti, email.",
       "version": "1.0.1"
     }
   ]

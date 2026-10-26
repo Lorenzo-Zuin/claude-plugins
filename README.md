@@ -1,6 +1,6 @@
 # Plugin di Claude Code
 
-Marketplace di plugin di Claude Code: un repository GitHub che Claude Code legge per installare plugin. Contiene `audit-fix`, `flow`, `orchestra`, `plancia` e `recap`.
+Marketplace di plugin di Claude Code: un repository GitHub che Claude Code legge per installare plugin. Contiene `audit-fix`, `flow`, `orchestra`, `plancia`, `recap` e `scrittura-testi`.
 
 | Plugin | Che cosa fa | Comando |
 |---|---|---|
@@ -9,6 +9,7 @@ Marketplace di plugin di Claude Code: un repository GitHub che Claude Code legge
 | [orchestra](plugins/orchestra/README.md) | la sessione principale pianifica, delega ai subagent e rivede; registro delle deleghe per progetto | `/orchestra:orchestra <compito>` |
 | [plancia](plugins/plancia/README.md) | pannello e banda: consumo e limiti, sessioni attive con il loro stato, diario tra sessioni, todo e prompt riusabili, conferme sui comandi rischiosi | `/plancia`, `/todo`, `/oggi`, `/riprendi` |
 | [recap](plugins/recap/README.md) | dà una forma fissa al messaggio finale di ogni lavoro: stato, ciò che non è fatto, avvertenze, i tuoi passi con i comandi, le domande con le risposte pronte, il fatto in una riga, il prompt per continuare | da sola, oppure `/recap:recap` |
+| [scrittura-testi](plugins/scrittura-testi/README.md) | le regole per scrivere e rivedere testi in italiano destinati a una persona: chi legge, forma, parole da evitare, revisione, documenti versionati, rendiconti | da sola, oppure `/scrittura-testi:scrittura-testi` |
 
 ## Struttura
 
@@ -41,6 +42,10 @@ plugins/
     skills/recap/SKILL.md           la forma del messaggio finale, con references/examples.md
     hooks/hooks.json                la ricorda a ogni avvio della sessione
     README.md
+  scrittura-testi/
+    .claude-plugin/plugin.json
+    skills/scrittura-testi/SKILL.md le regole di scrittura
+    README.md
 ```
 
 ## Installare
@@ -56,6 +61,7 @@ claude plugin install flow@lorenzo-plugins
 claude plugin install orchestra@lorenzo-plugins
 claude plugin install plancia@lorenzo-plugins
 claude plugin install recap@lorenzo-plugins
+claude plugin install scrittura-testi@lorenzo-plugins
 ```
 
 Poi si apre una sessione nuova. `lorenzo-plugins` è il `name` in `.claude-plugin/marketplace.json`.
@@ -74,7 +80,8 @@ Nel `.claude/settings.json` del progetto:
     "flow@lorenzo-plugins": true,
     "orchestra@lorenzo-plugins": true,
     "plancia@lorenzo-plugins": true,
-    "recap@lorenzo-plugins": true
+    "recap@lorenzo-plugins": true,
+    "scrittura-testi@lorenzo-plugins": true
   }
 }
 ```

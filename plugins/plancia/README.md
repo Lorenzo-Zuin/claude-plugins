@@ -59,7 +59,7 @@ claude plugin marketplace add Lorenzo-Zuin/claude-plugins
 claude plugin install plancia@lorenzo-plugins
 ```
 
-Poi si apre una sessione nuova. La banda compare sopra il prompt; il pannello si apre con `/plancia` o con il pulsante «Plancia» della banda.
+Poi si apre una sessione nuova. La banda compare sopra il prompt. Il pannello si apre da solo quando il terminale è largo almeno 144 colonne; più stretto, si apre al primo prompt della sessione. Si riapre con `/plancia` o con il pulsante «Plancia» della banda.
 
 ## Sviluppo
 

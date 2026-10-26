@@ -18,7 +18,7 @@
       "name": "flow",
       "source": "./plugins/flow",
       "description": "Development flow una phase alla volta: next (la phase dopo o la prossima issue autorizzata), work (P0 triage), spec (P1 spec con completeness matrix), plan (P2 technical plan con premise controllate), mockup (P3 mockup giudicati dall'agente ux-critic con la rubric), qa (P5 parte automatica), bench (P5 sul dispositivo con l'agente device-tester), handoff (P6 PR).",
-      "version": "0.3.1"
+      "version": "0.3.3"
     },
     {
       "name": "orchestra",
@@ -30,7 +30,7 @@
       "name": "plancia",
       "source": "./plugins/plancia",
       "description": "Pannello e banda per Claude Code: consumo e limiti, sessioni attive con il loro stato, diario tra sessioni, todo e prompt riusabili, conferme sui comandi rischiosi.",
-      "version": "0.3.0"
+      "version": "0.3.2"
     },
     {
       "name": "recap",

@@ -2,7 +2,7 @@
 
 Pannello laterale e banda sopra il prompt per Claude Code. Mostra consumo e limiti, lo stato delle sessioni aperte sul PC, il diario del lavoro tra sessioni, i todo per progetto e i prompt riusabili. Vale per qualunque progetto.
 
-È una mod: un modulo di hook TypeScript (`hooks/register.tsx`) che il motore di Claude Code carica. L'API delle mod è in early access e può cambiare tra una versione e l'altra. La mod è scritta e provata con Claude Code 2.1.308.
+È una mod: un modulo di hook TypeScript (`hooks/register.tsx`) che il motore di Claude Code carica. L'API delle mod è in early access e può cambiare tra una versione e l'altra. La mod è scritta con Claude Code 2.1.308; i suoi test passano con la 2.1.323, anche fuori da Windows.
 
 ## Che cosa mostra
 

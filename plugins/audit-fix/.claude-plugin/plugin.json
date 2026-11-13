@@ -1,7 +1,7 @@
 {
   "name": "audit-fix",
   "description": "Works through an automated audit report (version watch, security or provider deprecations): verifies every claim at the source, fixes what is safe and due in one pull request, and hands back the manual steps and the improvements for the report's generator.",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "author": {
     "name": "Lorenzo Zuin"
   },

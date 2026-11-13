@@ -11,7 +11,7 @@ Plugin di Claude Code con le regole per scrivere e rivedere testi in italiano de
 | Parole | niente parole inventate né termini inglesi italianizzati; l'elenco delle parole da evitare con l'alternativa |
 | Rivedere un testo | riscrivere invece di aggiungere, cambiare solo ciò che è stato criticato, sostituire ovunque una parola rifiutata |
 | Documenti versionati | una versione nuova è un file nuovo; la precedente va nella cartella delle versioni vecchie |
-| Rendiconto di un lavoro | prima ciò che non è fatto, poi ciò che tocca all'utente, poi in una riga ciò che è fatto |
+| Rendiconto di un lavoro | prima ciò che l'utente decide, poi ciò che fa, poi ciò che manca e chi lo fa, poi ciò che deve solo sapere; in fondo, in una riga, ciò che è fatto; ogni voce in un punto solo |
 
 ## Quando si usa
 

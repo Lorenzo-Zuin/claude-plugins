@@ -17,7 +17,7 @@ I file letti dal modello sono in inglese (costano meno token); questa guida è i
 7. **Pubblica** una richiesta di unione, se la sessione lo permette, con la tabella voce per voce e le prove.
 8. **Chiude il giro sul rapporto**, secondo la riga «Rapporto»: spunta nella issue le voci fatte, scrive un commento di esito e la fa chiudere all'unione della PR (`aggiorna`); oppure ti mostra il testo e aspetta il sì (`proponi`); oppure non la tocca (`non toccare`).
 9. **Scrive i rinvii** nel posto che il progetto indica, con la condizione che riapre ogni voce, e toglie quelli che la PR chiude. Le voci già rinviate non le riprende, finché la loro condizione non scatta.
-10. **Ti consegna** i passi da fare a mano, uno per azione, con comando e controllo; le voci sbagliate con la prova; le migliorie per chi ha scritto il rapporto e il comando per applicarle. Chiude con il resoconto nella forma del plugin [`recap`](../recap/README.md), se è installato.
+10. **Ti consegna** in `audit/handoff.md` i passi da fare a mano, uno per azione, con comando e controllo; le voci sbagliate con la prova; le migliorie per chi ha scritto il rapporto e il comando per applicarle. Se è installato il plugin [`recap`](../recap/README.md), il messaggio finale ha la sua forma: rimanda al file, porta i passi a mano in «Tocca a te» e ciò che non è verificato in «Manca». Senza `recap`, il messaggio contiene il testo del file e un riassunto di tre righe.
 
 ## Con orchestra
 

@@ -1,7 +1,7 @@
 {
   "name": "recap",
-  "description": "Shape of the closing message of a turn that did work: status in one line, what was done, what is missing and who does it, the user's steps with exact commands, questions with ready answers, and a prompt to paste into a new session.",
-  "version": "1.0.1",
+  "description": "Shape of the closing message of a turn that did work: questions with ready answers, the user's steps with exact commands, what is missing and who does it, what the user only needs to know, and one line on what was done, each item in one section only. A prompt for a new session only on request.",
+  "version": "2.0.0",
   "author": {
     "name": "Lorenzo Zuin"
   },

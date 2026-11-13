@@ -55,4 +55,4 @@ Chi legge è una persona competente con poco tempo. Il testo dice che cosa è, c
 
 ## Rendiconto di un lavoro
 
-Prima ciò che non è fatto o non è verificato, poi ciò che tocca all'utente, poi in una riga ciò che è fatto. Un difetto proprio si nomina, non si smussa.
+Prima ciò che l'utente deve decidere, poi ciò che deve fare, poi ciò che manca o non è verificato e chi lo fa, poi ciò che deve solo sapere; in fondo, in una riga, ciò che è fatto. Ogni voce sta in un punto solo. Un difetto proprio si nomina, non si smussa.

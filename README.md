@@ -8,7 +8,7 @@ Marketplace di plugin di Claude Code: un repository GitHub che Claude Code legge
 | [flow](plugins/flow/README.md) | il development flow una phase alla volta: la phase dopo o la prossima issue autorizzata, triage (P0), spec con completeness matrix (P1), technical plan con premise controllate (P2), mockup giudicati dall'agente `ux-critic` (P3), QA automatico (P5), prove sul dispositivo con l'agente `device-tester` e il bench lock (P5), handoff con la PR (P6) | `/flow:next`, `/flow:work`, `/flow:spec`, `/flow:plan`, `/flow:mockup`, `/flow:qa`, `/flow:bench`, `/flow:handoff` |
 | [orchestra](plugins/orchestra/README.md) | la sessione principale pianifica, delega ai subagent e rivede; registro delle deleghe per progetto | `/orchestra:orchestra <compito>` |
 | [plancia](plugins/plancia/README.md) | pannello e banda: consumo e limiti, sessioni attive con il loro stato, diario tra sessioni, todo e prompt riusabili, conferme sui comandi rischiosi | `/plancia`, `/todo`, `/oggi`, `/riprendi` |
-| [recap](plugins/recap/README.md) | dà una forma fissa al messaggio finale di ogni lavoro: stato, ciò che non è fatto, avvertenze, i tuoi passi con i comandi, le domande con le risposte pronte, il fatto in una riga, il prompt per continuare | da sola, oppure `/recap:recap` |
+| [recap](plugins/recap/README.md) | dà una forma fissa al messaggio finale di ogni lavoro: le domande con le risposte pronte, i tuoi passi con i comandi, che cosa manca e chi lo fa, che cosa devi solo sapere, il fatto in una riga; ogni informazione in un posto solo; il prompt per continuare solo se lo chiedi | da sola, oppure `/recap:recap` |
 | [scrittura-testi](plugins/scrittura-testi/README.md) | le regole per scrivere e rivedere testi in italiano destinati a una persona: chi legge, forma, parole da evitare, revisione, documenti versionati, rendiconti | da sola, oppure `/scrittura-testi:scrittura-testi` |
 
 ## Struttura
@@ -39,7 +39,7 @@ plugins/
     README.md
   recap/
     .claude-plugin/plugin.json
-    skills/recap/SKILL.md           la forma del messaggio finale, con references/examples.md
+    skills/recap/SKILL.md           la forma del messaggio finale, con references/examples.md e references/prompt.md
     hooks/hooks.json                la ricorda a ogni avvio della sessione
     README.md
   scrittura-testi/

@@ -1,3 +1,4 @@
+import type { On } from 'claude-code'
 import { expect, mock, test } from 'claude-code/testing'
 
 import { findRisk, findSecret, forecast, isSecretFile } from './lib'
@@ -61,7 +62,6 @@ test('il guardrail chiede conferma prima di un comando distruttivo', async ($, o
 })
 
 // Le risposte del motore che servono a session.start e a prompt.submit.
-type On = Parameters<Parameters<typeof test>[1]>[1]
 function engine(on: On) {
   mock.store(on)
   on('prompt.fill', () => ({ isFilled: true }))
@@ -94,10 +94,10 @@ test('al primo prompt apre la Plancia rimasta in attesa', async ($, on) => {
 
   await $.session.start({ cwd: '/lavoro/demo', surface: 'terminal', isInteractive: true })
   expect(opens.length).toBe(1)
-  await $.prompt.submit({ text: 'ciao' })
+  await $.prompt.submit({ text: 'ciao', wait: false, origin: { kind: 'composer' } })
   expect(opens.length).toBe(2)
   // Una volta sola per sessione: se poi la chiudi, il prompt dopo non la riapre.
-  await $.prompt.submit({ text: 'ancora' })
+  await $.prompt.submit({ text: 'ancora', wait: false, origin: { kind: 'composer' } })
   expect(opens.length).toBe(2)
 })
 
@@ -118,8 +118,9 @@ test('il pannello disegna ogni scheda su terminale e desktop', async ($, on) => 
     turns: 4,
   }
   // Un piccolo disco in memoria: il file della sessione s2 e quello che la Plancia scrive.
-  const disk = new Map<string, string>([['C:/Users/prova/.claude/plancia/sessions/s2.json', JSON.stringify(other)]])
-  const norm = (path: string) => path.replace(/\\/g, '/')
+  // Le chiavi partono da .claude/: fuori da Windows il motore risolve C:/Users/prova come percorso relativo.
+  const disk = new Map<string, string>([['.claude/plancia/sessions/s2.json', JSON.stringify(other)]])
+  const norm = (path: string) => path.replace(/\\/g, '/').replace(/^.*?\/(?=\.claude\/)/, '')
   on('fs.write', (_, e) => (disk.set(norm(e.path), e.text), { value: undefined }))
   on('fs.list', () => ({ value: [{ name: 's2.json', kind: 'file', size: 10, mtimeMs: now, isLink: false }] }))
   on('fs.read', (_, e) => {
@@ -141,7 +142,7 @@ test('il pannello disegna ogni scheda su terminale e desktop', async ($, on) => 
     if (surface === 'desktop') {
       // Tolta con ✕, non ricompare al giro di lettura dopo, anche se il suo battito continua.
       await ui.press({ key: 'hide-s2' })
-      disk.set('C:/Users/prova/.claude/plancia/sessions/s2.json', JSON.stringify({ ...other, seenAt: now + 20_000 }))
+      disk.set('.claude/plancia/sessions/s2.json', JSON.stringify({ ...other, seenAt: now + 20_000 }))
       await clock.advance(20_000)
       expect(await ui.find({ type: 'Text', text: /altro-progetto/ })).toBeUndefined()
     }

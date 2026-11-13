@@ -19,6 +19,8 @@ Chi legge è una persona competente con poco tempo. Il testo dice che cosa è, c
 - Impersonale: «non si può cambiare». Il prodotto non dà del tu.
 - Mai la forma riflessiva con il sistema come soggetto sottinteso: «una segnalazione già inviata non si ritira», «il periodo non si ricalcola da solo», «si riallineano da soli». O si dice chi fa che cosa («nessuno ricalcola il periodo chiuso»), o la frase si toglie.
 - Concreto: numeri e nomi veri al posto degli aggettivi. «Indietro di due giorni», non «leggermente indietro».
+- Un confronto dice la direzione («più basse», «in linea», «più alte»), non il rapporto fra due grandezze che il lettore deve calcolare: no «il 78 % di ottobre». Una percentuale va bene quando dice una parte del tutto: «il 61 % delle spese è per Casa».
+- Né telegrafico né aulico: si capisce subito di che cosa si parla. No un participio senza il suo soggetto («Speso il 78 % di tutto ottobre»), no un giro da relazione («Casa pesa di più»). Se per capire una frase bisogna rileggerla, si cambia.
 - Un'informazione sta in un posto solo. Altrove si rimanda.
 - Tabelle per confrontare elementi paralleli; elenchi per passi o casi; prosa per un ragionamento di poche righe. Mai tabelle decorative.
 - Virgolette basse «così» per citare testi dell'interfaccia; backtick solo per identificatori di codice, e mai nei testi per l'esterno.

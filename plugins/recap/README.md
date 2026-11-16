@@ -4,9 +4,9 @@ Plugin di Claude Code che dà una forma fissa al messaggio con cui Claude chiude
 
 ## Perché
 
-Il resoconto si legge una volta, spesso dal telefono, ore dopo. Una lettura deve dire subito quattro cose: **che cosa devo decidere, che cosa devo fare, che cosa manca, di che cosa devo solo prendere atto**. Ciò che è stato fatto conta meno di tutto: lo dicono già il diff e la PR.
+Il resoconto si legge una volta, spesso dal telefono, ore dopo. Il titolo e la riga sotto dicono subito **se devi fare qualcosa e se Claude sta ancora lavorando**. Il resto della lettura dice quattro cose: **che cosa devo decidere, che cosa devo fare, che cosa manca, di che cosa devo solo prendere atto**. Ciò che è stato fatto conta meno di tutto: lo dicono già il diff e la PR.
 
-Senza regole precise i resoconti hanno sempre gli stessi difetti. La stessa informazione compare in più sezioni. Azioni, decisioni, cose non fatte, spiegazioni e risultati di analisi finiscono in un contenitore unico, e non si capisce che cosa è da fare e che cosa è solo da sapere. La domanda sta solo nel riquadro dell'app desktop, oppure il titolo dice «Finito» e il riquadro fa una domanda. Per questo ogni voce sta in una sola sezione, scelta con un criterio. Il prompt per una sessione nuova si scrive solo su richiesta: in 255 resoconti di 12 progetti compare 10 volte, e nessuno lo usa. Gli esempi sono in [references/examples.md](skills/recap/references/examples.md).
+Senza regole precise i resoconti hanno sempre gli stessi difetti. La stessa informazione compare in più sezioni. Azioni, decisioni, cose non fatte, spiegazioni e risultati di analisi finiscono in un contenitore unico, e non si capisce che cosa è da fare e che cosa è solo da sapere. La domanda sta solo nel riquadro dell'app desktop, oppure il titolo dice «Finito» e il riquadro fa una domanda. Per questo ogni voce sta in una sola sezione, scelta con un criterio. Un altro difetto: il titolo «Da continuare» non diceva chi continua, e compariva sia con Claude fermo sia con Claude ancora al lavoro in background. Per questo il titolo e la riga sotto dicono a chi tocca. Il prompt per una sessione nuova si scrive solo su richiesta: in 255 resoconti di 12 progetti compare 10 volte, e nessuno lo usa. Gli esempi sono in [references/examples.md](skills/recap/references/examples.md).
 
 ## Che cosa fa
 
@@ -14,36 +14,40 @@ Il messaggio finale ha sempre le stesse sezioni, in quest'ordine. Ogni voce va n
 
 | Sezione | Che cosa contiene | Criterio |
 |---|---|---|
-| Titolo | lo stato: ❓ Aspetto una tua risposta, ⛔ Bloccato, ⏸️ Da continuare, ✅ Finito | — |
+| Titolo | lo stato: 🔄 Sto ancora lavorando, ❓ Aspetto una tua risposta, ⛔ Bloccato, ⏸️ Mi fermo qui: resta lavoro, ✅ Finito | — |
+| Riga del turno | una riga sola, sotto il titolo: `**Tu:**` che cosa fai adesso («niente da fare», «rispondi alla 1», «fai i 2 passi qui sotto») · `**Io:**` che cosa fa la sessione («continuo da solo: …», «fermo finché rispondi», «ho finito») | — |
 | **❓ Decidi** | al massimo 3 domande chiuse, con codici di risposta (`1A`, `1B`) e la scelta consigliata per prima: scelte, approvazioni di una spesa, offerte («seguo io la PR?») | rispondi nella chat |
 | **👉 Tocca a te** | caselle, una per azione, nell'ordine in cui le fai: dove (PC e shell, browser, telefono), il comando pronto da incollare, la riga ✔ con ciò che vedi se è andata bene. Denaro, minuti a pagamento e produzione sono scritti nella stessa riga | fai qualcosa fuori dalla chat |
-| **⏳ Manca** | ciò che non è fatto o non è verificato e non tocca a te: il perché in poche parole, chi lo fa e quando (una sessione nuova, Claude dopo la tua risposta, la CI dopo il merge). Anche i difetti trovati e non corretti e i dubbi («Non sicuro: …») | qualcun altro deve ancora agire |
+| **⏳ Manca** | ciò che non è fatto o non è verificato e non tocca a te: il perché in poche parole, chi lo fa e quando (Claude in questa sessione, Claude dopo la tua risposta, una sessione nuova, la CI dopo il merge). Anche i difetti trovati e non corretti e i dubbi («Non sicuro: …») | qualcun altro deve ancora agire |
 | **ℹ️ Da sapere** | ciò che cambia per te senza che tu faccia niente: un cambio che vedrai, una scelta di Claude o una richiesta fatta in un altro modo con il modo di annullarla, un rischio che oggi nessuno può verificare | prendi solo atto |
 | `✅ Fatto: …` | una riga, senza titolo di sezione, con il link alla PR o al commit | — |
 
 Claude non scrive come funziona il sistema oggi, gli elenchi di modifiche, i conteggi dei test, i tentativi, né rimandi da una voce all'altra («vedi domanda 1»). Un passo che dipende da una risposta arriva dopo la risposta.
 
-Lo stato dipende dalle sezioni. Se valgono più stati, vale il primo dell'elenco:
-- **❓ Aspetto una tua risposta**: la sessione aspetta un tuo messaggio, cioè una risposta a Decidi oppure «fatto» dopo i tuoi passi;
+Lo stato dice a chi tocca. Dipende dalle sezioni e da ciò che è in esecuzione. Se valgono più stati, vale il primo dell'elenco:
+- **🔄 Sto ancora lavorando**: la sessione prosegue da sola dopo il messaggio, perché un agente o un comando in background è in esecuzione e alla sua fine la sessione riparte. Il lavoro in corso è una voce di Manca che finisce con «→ io, in questa sessione, già in corso». Una domanda in Decidi dice entro quando serve la risposta. Claude non usa questo stato se niente è in esecuzione;
+- **❓ Aspetto una tua risposta**: la sessione è ferma e aspetta un tuo messaggio, cioè una risposta a Decidi oppure «fatto» dopo i tuoi passi;
 - **⛔ Bloccato**: il lavoro aspetta un cambio esterno che un messaggio non risolve, per esempio l'approvazione di un amministratore;
-- **⏸️ Da continuare**: in Manca c'è ancora qualcosa;
+- **⏸️ Mi fermo qui: resta lavoro**: la sessione si ferma e in Manca c'è ancora qualcosa, per una sessione nuova o per la CI;
 - **✅ Finito**: Decidi e Manca sono vuote. In Tocca a te possono restare passi, per esempio il merge.
 
-Limiti: il resoconto sta in 30 righe; una sezione ha al massimo 5 voci; una voce al massimo 15 parole, poi una freccia `→`. Niente paragrafi.
+Sotto il titolo c'è sempre la riga del turno. Se Decidi e Tocca a te sono vuote, la metà `**Tu:**` dice «niente da fare», con queste parole.
+
+Limiti: il resoconto sta in 30 righe; una sezione ha al massimo 5 voci; una voce al massimo 15 parole, poi una freccia `→`. Niente paragrafi: il solo testo libero è la riga del turno, al massimo 25 parole.
 
 Prima di scrivere, Claude fa da sé ciò che può ancora fare e confronta il risultato con la richiesta, voce per voce. Ti passa solo ciò che non può fare da sé: il PC, un pannello web, un segreto, denaro, un dispositivo, una decisione, un merge. I comandi vengono dai file del progetto o da ciò che Claude ha lanciato nella sessione, mai a memoria. Le tue regole valgono sempre: lingua, termini, `;` al posto di `&&`.
 
 ### Dopo un'analisi o una spiegazione
 
-Se il lavoro del turno è una risposta (un'analisi, una spiegazione, una revisione, un confronto), il messaggio comincia con la risposta, nella forma che le serve e senza titolo di stato. Dopo una riga `---` vengono il titolo di stato e le sezioni Decidi, Tocca a te e Manca, solo se contengono qualcosa. La riga Fatto non c'è, perché il lavoro fatto è la risposta. Se non resta niente, il messaggio è solo la risposta.
+Se il lavoro del turno è una risposta (un'analisi, una spiegazione, una revisione, un confronto), il messaggio comincia con la risposta, nella forma che le serve e senza titolo di stato. Dopo una riga `---` vengono il titolo di stato, la riga del turno e le sezioni Decidi, Tocca a te e Manca, solo se contengono qualcosa. La riga Fatto non c'è, perché il lavoro fatto è la risposta. Se non resta niente, il messaggio è solo la risposta.
 
 ### Il riquadro finale dell'app desktop
 
 Nell'app desktop, sotto il messaggio, compare un riquadro (lo strumento `mcp__ccd_turn__wrap_up`) con quattro campi. Il riquadro non ripete il messaggio e dice lo stesso stato del titolo:
 - `recap` contiene la riga Fatto, che quindi nel messaggio non c'è; dopo un'analisi, la conclusione in una frase;
-- `ask` c'è solo con ❓ e rimanda alla domanda, con la scelta consigliata: «Rispondi alla 1: consiglio 1A». Le domande restano nel messaggio, in Decidi, così le leggi anche dove il riquadro non compare;
+- `ask` c'è sempre con ❓, e con 🔄 se Decidi contiene una domanda. Rimanda alla domanda, con la scelta consigliata: «Rispondi alla 1: consiglio 1A». Le domande restano nel messaggio, in Decidi, così le leggi anche dove il riquadro non compare;
 - `actions` contiene i pulsanti: uno per scelta con una domanda sola, uno con tutte le scelte consigliate con più domande, «Fatto, prosegui» quando Claude aspetta i tuoi passi;
-- `blocked` vale `true` con ❓ e ⛔.
+- `blocked` vale `true` con ❓ e ⛔. Con 🔄 vale `false`, e `recap` comincia con «Sto ancora lavorando: ».
 
 ### Il prompt per una sessione nuova
 
@@ -72,6 +76,7 @@ Senza plugin, come copia: si copia `skills/recap/` in `~/.claude/skills/`. Il no
 ## Limiti
 
 - Claude Code ha un comando suo che si chiama `/recap` («Generate a one-line session recap now»): nel menu dei comandi compare per primo e non c'entra con questo plugin. Il comando del plugin è `/recap:recap`, con il prefisso. L'hook e le altre skill usano il nome intero, quindi il modello non li confonde.
+- Lo stato 🔄 dipende da ciò che Claude sa dei lavori in background della sessione. Se un agente in background si ferma senza avvisare, la sessione non riparte: in quel caso scrivi «a che punto sei?».
 - Una skill non è un obbligo: Claude la carica quando la riconosce. L'hook rende la cosa molto più probabile, non certa. Se un resoconto esce senza questa forma, basta scrivere `/recap:recap`.
 - L'hook stampa una riga di testo con `echo`. Sotto Linux è provato. Su Windows, con Git Bash e con PowerShell, `echo` dovrebbe funzionare, ma non è provato.
 - I campi del riquadro dell'app desktop sono ricavati da 40 riquadri veri, non da una documentazione. Il significato esatto di `blocked` non è documentato.

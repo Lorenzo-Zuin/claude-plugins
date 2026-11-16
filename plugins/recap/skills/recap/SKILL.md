@@ -1,10 +1,10 @@
 ---
 name: recap
-description: Shape of the closing message of any turn that did work. Use it every time you end a task or a session, stop mid-task to ask the user for a decision, an approval or an action, hand over unfinished work, or the user asks for a recap, for where things stand, or for a prompt to continue in a new session. Questions with ready answers, the user's steps with exact commands, what is missing and who does it, what the user only needs to know, and one line on what was done; each item in one section only. After an analysis or an explanation that leaves something to decide, do or check, the answer comes first and the sections follow. Not for an answer that leaves nothing open.
+description: Shape of the closing message of any turn that did work. Use it every time you end a task or a session, stop mid-task to ask the user for a decision, an approval or an action, hand over unfinished work, write to the user while background work of this session still runs, or the user asks for a recap, for where things stand, or for a prompt to continue in a new session. A title and one line that say who moves next (the user, this session by itself, nobody), then questions with ready answers, the user's steps with exact commands, what is missing and who does it, what the user only needs to know, and one line on what was done; each item in one section only. After an analysis or an explanation that leaves something to decide, do or check, the answer comes first and the sections follow. Not for an answer that leaves nothing open.
 argument-hint: [prompt] [optional focus]
 ---
 
-The user reads the recap once, often on a phone, hours later. One read must tell **what to decide, what to do, what is missing, what only to know**. What was done matters least: the diff and the PR already hold it.
+The user reads the recap once, often on a phone, hours later. The title and the line under it must tell **whether the user has to act and whether this session is still working**. The rest of the read must tell **what to decide, what to do, what is missing, what only to know**. What was done matters least: the diff and the PR already hold it.
 
 Project rules (CLAUDE.md, the user's preferences) win on language, terms and command conventions. Long detail goes in the files other skills ask for (session log, hand-off, PR body): link them, never paste them. Read `${CLAUDE_SKILL_DIR}/references/examples.md` the first time you use this skill in a session.
 
@@ -28,6 +28,7 @@ Delete, never move elsewhere: how things work now, lists of changes, test counts
 
 ````markdown
 # ❓ Aspetto una tua risposta
+**Tu:** <what the user does now, or «niente da fare»> · **Io:** <what this session does now>
 
 ## ❓ Decidi
 1. <Closed question>? <cost or consequence, when it decides>
@@ -41,7 +42,7 @@ Delete, never move elsewhere: how things work now, lists of changes, test counts
   ✔ <what you see when it worked>
 
 ## ⏳ Manca
-- **<what>** · <why, a few words> → <who and when: sessione nuova | io, dopo la tua risposta | la CI, dopo il merge>
+- **<what>** · <why, a few words> → <who and when: io, in questa sessione, già in corso | io, dopo la tua risposta | sessione nuova | la CI, dopo il merge>
 
 ## ℹ️ Da sapere
 - <what changes for the user> → <how to undo it, for a choice of yours>
@@ -49,26 +50,36 @@ Delete, never move elsewhere: how things work now, lists of changes, test counts
 ✅ Fatto: <one line, with the PR or commit link>
 ````
 
-## Status
-The title follows the sections. When more than one fits, the first of this list wins.
-- `❓ Aspetto una tua risposta`: this session waits for a message from the user: a question in **Decidi**, or a last step in **Tocca a te** that ends with «poi scrivimi "fatto"».
+## Status and turn line
+The title says who moves next. It follows the sections and what is running. When more than one fits, the first of this list wins.
+- `🔄 Sto ancora lavorando`: this session goes on by itself after this message. A background agent, command or watch is running **now**, and its end wakes the session. Never when nothing is running: a «continuo» with nothing behind it is false. Then do the work in this turn, or use another title.
+- `❓ Aspetto una tua risposta`: this session is stopped until a message from the user: a question in **Decidi**, or a last step in **Tocca a te** that ends with «poi scrivimi "fatto"».
 - `⛔ Bloccato`: the work waits for something outside that a message cannot change: an admin's approval, a service that is down, a missing permission. **Manca** or **Tocca a te** says what.
-- `⏸️ Da continuare`: **Manca** is not empty: work or a check is still open, for another session, for you after something else, or for the CI.
+- `⏸️ Mi fermo qui: resta lavoro`: this session stops and **Manca** is not empty: work or a check is still open, for another session or for the CI.
 - `✅ Finito`: **Decidi** and **Manca** are empty. **Tocca a te** may hold steps, such as the merge. Never `✅` with a red check, a skipped check, or an unverified item that decides the goal: those are in **Manca**.
+
+Under the title, always, the **turn line**: one line, two halves, the user first. It is the only free text outside the sections.
+- `**Tu:**` what the user does now, as a pointer to the sections, never the content: «niente da fare» · «rispondi alla 1» · «rispondi alla 1 quando puoi» · «fai i 2 passi qui sotto» · «fai i 2 passi, poi scrivimi "fatto"». When **Decidi** and **Tocca a te** are empty it is «niente da fare», in these words.
+- `**Io:**` what this session does now: «continuo da solo: <what>; riparto quando <event>» · «fermo finché rispondi» · «fermo: aspetto <what, outside>» · «mi fermo qui; il resto a <who>» · «ho finito».
+
+With `🔄`:
+- the work this session is doing is an item in **Manca** that ends with «→ io, in questa sessione, già in corso»;
+- a question in **Decidi** says when its answer is needed («mi serve prima del commit del pacchetto 0.4»). If the work cannot go on without the answer, nothing is running for it: the title is `❓`;
+- `**Tu:**` never asks the user to wait, to watch or to come back: the session writes again by itself.
 
 ## The end-of-turn card
 In the desktop app a tool such as `mcp__ccd_turn__wrap_up` draws a card under the message. The card repeats nothing and agrees with the title:
 - `recap`: the Fatto line, as plain text. The message then has no Fatto line. After an answer (below): its conclusion in one sentence.
-- `ask`: only with `❓`, and always with `❓`. A pointer, never the question: «Rispondi alla 1: consiglio 1A», «Scrivimi "fatto" dopo i passi». Every question stays in **Decidi**.
+- `ask`: always with `❓`, and with `🔄` when **Decidi** has a question; never otherwise. A pointer, never the question: «Rispondi alla 1: consiglio 1A», «Scrivimi "fatto" dopo i passi», «Rispondi alla 1 quando puoi: intanto continuo». Every question stays in **Decidi**.
 - `actions`: with one question, one button per choice, label `1A Sì`, message `1A`. With more questions, one button with all the recommended codes when each question has one (message `1A 2A`), otherwise none. For «fatto», one button «Fatto, prosegui».
-- `blocked`: true with `❓` and `⛔`, otherwise false.
+- `blocked`: true with `❓` and `⛔`, otherwise false. With `🔄` always false, and `recap` starts with «Sto ancora lavorando: ».
 
 ## After an analysis or an explanation
-When what the turn produced is an answer (an analysis, an explanation, a review, a comparison), this skill applies too: write the answer first, in the shape it needs, with no status title. Then, only if **Decidi**, **Tocca a te** or **Manca** have items: a `---` line, the status title and those sections. No Fatto line: the answer is what was done. **Da sapere** only for a change you made, never for a finding. An offer to fix what the answer found is a question in **Decidi**; a point the answer could not verify is in **Manca**. With nothing left, the message is the answer alone. The sections never repeat the answer.
+When what the turn produced is an answer (an analysis, an explanation, a review, a comparison), this skill applies too: write the answer first, in the shape it needs, with no status title. Then, only if **Decidi**, **Tocca a te** or **Manca** have items: a `---` line, the status title, the turn line and those sections. No Fatto line: the answer is what was done. **Da sapere** only for a change you made, never for a finding. An offer to fix what the answer found is a question in **Decidi**; a point the answer could not verify is in **Manca**. With nothing left, the message is the answer alone. The sections never repeat the answer.
 
 ## Limits
 - The recap, without an answer before it: 30 lines at most. A section: 5 items at most. An item: 15 words at most, then a `→`.
-- No paragraph of prose under the title or in the sections.
+- No paragraph of prose under the title or in the sections. Under the title only the turn line, 25 words at most.
 - **Decidi**: closed questions, 3 at most, answer codes, recommended first. A decision the user takes alone and tells you lives here, never as a step «decidi tu» or «leggi e scegli». A decision to take with someone else is a step in **Tocca a te**: «Decidi con il cliente se …».
 - **Tocca a te**: one action per checkbox, in the order the user does them. Where it runs, the command ready to paste in its shell, the `✔` line. A step that waits for an event starts with it: «Dopo il merge della PR #3, …». A website step gives the exact labels: «Settings → Rules → Rulesets». Money, paid minutes, data loss or production in the same line. A long text to paste (a commit message, a SQL script) goes in a file: link it. The reason for a step, in a few words, only when the user would skip the step without it.
 - **Manca**: never the user's own steps, and never work that a question in **Decidi** already decides. A doubt reads «Non sicuro: <what> → <who checks it, when>»; when the user checks it, it is a step in **Tocca a te**.
@@ -86,7 +97,7 @@ When what the turn produced is an answer (an analysis, an explanation, a review,
 Only when the user asks for it: `/recap:recap prompt`, «dammi il prompt», «prompt per una sessione nuova». Then read `${CLAUDE_SKILL_DIR}/references/prompt.md` and follow it. Never write or offer one unasked: an item in **Manca** for a new session is enough.
 
 ## Check before sending
-Read only the title, the headings and the bold: can the user act from those alone? Is every item in one section only? Do the title and the card say the same thing? Then count the lines. Then read each sentence once: if it needs a second read, cut it or split it.
+Read only the title and the turn line: does the user know whether to act, and whether you are still working or stopped? If the title is `🔄`, is something really running? Then read only the headings and the bold: can the user act from those alone? Is every item in one section only? Do the title and the card say the same thing? Then count the lines. Then read each sentence once: if it needs a second read, cut it or split it.
 
 ## Arguments
 If the first word is `prompt`, add the prompt for a new session after the recap. The rest is the focus of the recap.

@@ -35,8 +35,8 @@
     {
       "name": "recap",
       "source": "./plugins/recap",
-      "description": "Dà una forma fissa al messaggio finale di ogni lavoro: le domande con le risposte pronte, i tuoi passi con i comandi esatti, che cosa manca e chi lo fa, che cosa devi solo sapere e il lavoro fatto in una riga. Ogni informazione sta in un posto solo. Il prompt per una sessione nuova solo se lo chiedi.",
-      "version": "2.0.0"
+      "description": "Dà una forma fissa al messaggio finale di ogni lavoro: un titolo e una riga che dicono a chi tocca (a te, a Claude da solo, a nessuno), le domande con le risposte pronte, i tuoi passi con i comandi esatti, che cosa manca e chi lo fa, che cosa devi solo sapere e il lavoro fatto in una riga. Ogni informazione sta in un posto solo. Il prompt per una sessione nuova solo se lo chiedi.",
+      "version": "2.1.0"
     },
     {
       "name": "scrittura-testi",

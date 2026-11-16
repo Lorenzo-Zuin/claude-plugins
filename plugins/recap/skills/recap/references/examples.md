@@ -1,10 +1,11 @@
 # Examples
 
-Four messages in the shape of `SKILL.md`. A and B rewrite real recaps the user could not act on: the facts are those of the originals, to show the shape, not to reuse. C and D are invented. Then a list of typical items and the section each one goes to.
+Five messages in the shape of `SKILL.md`. A, B and E rewrite real recaps the user could not act on: the facts are those of the originals (in E with other names), to show the shape, not to reuse. C and D are invented. Then a list of typical items and the section each one goes to.
 
 ## A. Stopped for an answer (`❓`), with the desktop card
 
 # ❓ Aspetto una tua risposta
+**Tu:** rispondi alle domande 1 e 2; i 2 passi vengono dopo il merge · **Io:** fermo finché rispondi
 
 ## ❓ Decidi
 1. Lancio la build Android di prova? 25-40 minuti di Actions; un secondo tentativo richiede lo stesso tempo.
@@ -44,7 +45,8 @@ Where the items of the original went: the build was in «Non fatto» and in the 
 
 ## B. Hand-over with steps (`⏸️`)
 
-# ⏸️ Da continuare
+# ⏸️ Mi fermo qui: resta lavoro
+**Tu:** fai i 3 passi qui sotto · **Io:** mi fermo qui; il resto a una sessione nuova e alla CI
 
 ## 👉 Tocca a te
 - [ ] **Rimetti le patch di `expo-secure-store` e `expo-share-intent`** · PC, Git Bash. Senza, la build Android esce rotta
@@ -68,6 +70,7 @@ The database reset was a warning of its own in the original. It is the reason fo
 ## C. Nothing left (`✅`)
 
 # ✅ Finito
+**Tu:** fai il merge, un passo · **Io:** ho finito
 
 ## 👉 Tocca a te
 - [ ] **Fai il merge della PR #170** · GitHub nel browser, Merge pull request → Confirm merge
@@ -88,6 +91,7 @@ L'import è lento perché manca l'indice su `orders.customer_id`: ogni riga impo
 ---
 
 # ❓ Aspetto una tua risposta
+**Tu:** rispondi alla 1 · **Io:** fermo finché rispondi
 
 ## ❓ Decidi
 1. Aggiungo una migrazione che ricrea l'indice? In produzione blocca le scritture su `orders` per circa 2 minuti.
@@ -97,6 +101,30 @@ L'import è lento perché manca l'indice su `orders.customer_id`: ogni riga impo
 - **Le altre tabelle ricreate dalla `0042`** · non controllate → io, dopo la tua risposta
 
 Card: `recap` «L'import è lento perché la migrazione 0042 ha tolto l'indice su orders.customer_id.», `ask` «Rispondi alla 1: consiglio 1A.», one button per choice (`1A Sì, PR verso main` → `1A`, `1B Lo creo io` → `1B`), `blocked` true.
+
+## E. Still working (`🔄`)
+
+The session closed one package and started an agent in the background for the next one. The turn ends, the work does not.
+
+# 🔄 Sto ancora lavorando
+**Tu:** rispondi alla 1 quando puoi · **Io:** continuo da solo: preparo il pacchetto 0.4; riparto quando l'agente consegna
+
+## ❓ Decidi
+1. Tengo la modifica locale a `Shop.sln`, più vecchia di questo lavoro? Il pacchetto 0.4 aggiunge un progetto a quel file: mi serve prima del suo commit.
+   `1A` Sì, la tengo ← consigliata · `1B` No, la annullo
+
+## ⏳ Manca
+- **Pacchetto 0.4 (libreria, contratti, scheletro)** · un agente legge gli schemi esistenti → io, in questa sessione, già in corso
+- **Compilazione di `Shop.sln` intera** · finora compila solo `Shop.Data` → io, alla chiusura del pacchetto 0.4
+
+## ℹ️ Da sapere
+- Lo script `2026.1.74`, l'EDMX e i due documenti sono modificati ma fuori dal commit
+
+✅ Fatto: pacchetto 0.3 chiuso; `Shop.Data` compila con il modello nuovo.
+
+Card: `recap` «Sto ancora lavorando: pacchetto 0.3 chiuso, preparo lo 0.4.», `ask` «Rispondi alla 1 quando puoi: intanto continuo.», one button per choice, `blocked` false.
+
+The original had the title «Da continuare», and under it one sentence with both the closed package and the work in progress: the user could not tell whether the session had stopped. The question was the end of a warning («dimmi se quella modifica è da tenere»): now it is in **Decidi**, with the moment the answer is needed. «Riparte da sola alla consegna» was at the end of an item: now it is the `**Io:**` half of the turn line.
 
 ## Where typical items go
 
@@ -115,3 +143,8 @@ Card: `recap` «L'import è lento perché la migrazione 0042 ha tolto l'indice s
 | «Il push non è fatto, come mi avevi chiesto» | deleted; a step in **Tocca a te** if the user must push |
 | «Rilancio la validazione?» in **Decidi** and «Validazione non eseguita → io, dopo la tua risposta» in **Manca** | **Decidi** only: the question already covers it |
 | A list of what was changed, test counts | deleted: the PR holds them |
+| «Un agente sta ancora leggendo i file» | **Manca**, «→ io, in questa sessione, già in corso»; the title is `🔄` |
+| «Poi continuo con il pacchetto 0.4», with nothing running | not written: do the work in this turn, or the title is `⏸️` and the item says who continues |
+| «Dimmi se quella modifica è da tenere» at the end of a warning | **Decidi**, as a closed question; with `🔄`, with the moment the answer is needed |
+| «Non devi fare niente» as an item of **Da sapere** | the `**Tu:**` half of the turn line: «niente da fare» |
+| «Aspetta la fine dell'agente» as a step in **Tocca a te** | deleted: with `🔄` the session writes again by itself |
